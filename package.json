@@ -1,0 +1,54 @@
+{
+  "name": "portaliq",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Moneyball for Maryland — NCAA D1 College Football Transfer Portal Intelligence Platform",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node --env-file=.env.local --import tsx scripts/migrate.ts",
+    "db:push": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs push",
+    "db:studio": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs studio",
+    "ingest:portal": "node --env-file=.env.local --import tsx scripts/ingest/run.ts",
+    "ingest:enrich": "node --env-file=.env.local --import tsx scripts/ingest/enrich.ts",
+    "ai:evaluate": "node --env-file=.env.local --import tsx scripts/ai/evaluate.ts",
+    "ingest:maryland": "node --env-file=.env.local --import tsx scripts/ingest/maryland.ts",
+    "ai:needs": "node --env-file=.env.local --import tsx scripts/ai/needs.ts",
+    "score": "node --env-file=.env.local --import tsx scripts/ingest/score.ts",
+    "ingest:board": "node --env-file=.env.local --import tsx scripts/ingest/board.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.8.0",
+    "@tanstack/react-query": "5.51.1",
+    "clsx": "2.1.1",
+    "drizzle-orm": "^0.45.2",
+    "lucide-react": "0.408.0",
+    "next": "14.2.35",
+    "postgres": "^3.4.9",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tailwind-merge": "2.4.0",
+    "zod": "3.23.8",
+    "zustand": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.19",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.35",
+    "postcss": "8.4.39",
+    "tailwindcss": "3.4.6",
+    "tsx": "^4.22.4",
+    "typescript": "5.5.3"
+  }
+}

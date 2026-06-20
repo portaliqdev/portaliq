@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  --canvas: #0b0b0c;
+  --base: #101114;
+  --surface-1: #16181d;
+  --surface-2: #1e2127;
+  --surface-3: #262a32;
+  --hairline: #23262d;
+  --hairline-strong: #2e333c;
+  --ink: #f4f5f7;
+  --ink-sub: #b6bac2;
+  --ink-muted: #7c828c;
+  --md-red: #e21833;
+  --md-gold: #ffd520;
+
+  --font-display: "Saira Condensed", "Oswald", "Arial Narrow", "Helvetica Neue",
+    system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+[data-theme="light"] {
+  --canvas: #ffffff;
+  --base: #f4f5f7;
+  --surface-1: #ffffff;
+  --surface-2: #f1f2f4;
+  --surface-3: #e7e9ed;
+  --hairline: #dde0e5;
+  --hairline-strong: #c7ccd3;
+  --ink: #0b0b0c;
+  --ink-sub: #3c424d;
+  --ink-muted: #6b7280;
+  --md-red: #c3142b;
+  --md-gold: #8a7410;
+}
+
+* {
+  border-color: theme("colors.hairline.DEFAULT");
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tabular numerals — stats columns must not jitter */
+.tnum {
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Eyebrow / scoreboard label */
+.eyebrow {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  line-height: 0.875rem;
+  color: var(--ink-muted);
+}
+
+/* Maryland flag signature rail (red/gold/black/white quadrant feel) */
+.flag-rail {
+  background: repeating-linear-gradient(
+    180deg,
+    #e21833 0,
+    #e21833 8px,
+    #ffd520 8px,
+    #ffd520 16px,
+    #0b0b0c 16px,
+    #0b0b0c 24px,
+    #f4f5f7 24px,
+    #f4f5f7 32px
+  );
+}
+
+/* Dark scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--base);
+}
+::-webkit-scrollbar-thumb {
+  background: #2e333c;
+  border-radius: 6px;
+  border: 2px solid var(--base);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3c424d;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.04),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--md-gold);
+  outline-offset: 1px;
+}
