@@ -1,3 +1,7 @@
+// Better Auth tables (user/session/account/verification) — re-exported so
+// drizzle-kit includes them in migrations.
+export * from "./auth-schema";
+
 /**
  * Drizzle table definitions — Postgres mirror of the Zod domain types in
  * src/types/*. Source of truth for shapes stays in src/types; this file is the

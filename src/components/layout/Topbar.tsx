@@ -1,17 +1,28 @@
 "use client";
 
-import { Search, ChevronDown, Calendar } from "lucide-react";
+import { Search, ChevronDown, Calendar, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSession, signOut } from "@/lib/auth/client";
 
 export function Topbar() {
   const router = useRouter();
   const [q, setQ] = useState("");
+  const { data: session } = useSession();
+  const user = session?.user;
+  const initials = user?.name
+    ? user.name.split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase()
+    : "DP";
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const term = q.trim();
     if (term) router.push(`/portal?q=${encodeURIComponent(term)}`);
+  }
+
+  async function onSignOut() {
+    await signOut();
+    router.push("/auth/sign-in");
   }
 
   return (
@@ -51,9 +62,23 @@ export function Topbar() {
           <ChevronDown size={13} className="text-ink-muted" />
         </button>
 
-        {/* User */}
-        <div className="ml-1 flex h-8 w-8 items-center justify-center rounded-full bg-surface-3 text-[11px] font-bold text-ink ring-1 ring-hairline-strong">
-          DP
+        {/* User + sign out (sign-out only shown when signed in) */}
+        <div className="ml-1 flex items-center gap-2">
+          <div
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-3 text-[11px] font-bold text-ink ring-1 ring-hairline-strong"
+            title={user?.email ?? "Demo"}
+          >
+            {initials}
+          </div>
+          {user && (
+            <button
+              onClick={onSignOut}
+              title="Sign out"
+              className="flex h-8 w-8 items-center justify-center rounded-md border border-hairline-strong text-ink-muted hover:text-ink"
+            >
+              <LogOut size={15} />
+            </button>
+          )}
         </div>
       </div>
     </header>
