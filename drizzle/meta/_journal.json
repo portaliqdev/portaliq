@@ -36,6 +36,13 @@
       "when": 1781988088022,
       "tag": "0004_silky_gamma_corps",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782092110272,
+      "tag": "0005_gifted_warbird",
+      "breakpoints": true
     }
   ]
 }
