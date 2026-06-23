@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { signIn } from "@/lib/auth/client";
 import { Button } from "@/components/ui/Button";
 
@@ -38,9 +37,6 @@ export default function SignInPage() {
         <Button type="submit" variant="primary" className="w-full" disabled={pending}>
           {pending ? "Signing in…" : "Sign in"}
         </Button>
-        <p className="text-center text-[12px] text-ink-muted">
-          Need an account? <Link href="/auth/sign-up" className="text-md-red hover:underline">Sign up</Link>
-        </p>
       </form>
     </div>
   );

@@ -20,7 +20,7 @@ export const authEnabled = Boolean(process.env.BETTER_AUTH_SECRET);
 export const auth = authEnabled
   ? betterAuth({
       database: drizzleAdapter(db, { provider: "pg", schema: authSchema }),
-      emailAndPassword: { enabled: true },
+      emailAndPassword: { enabled: true, disableSignUp: true },
       secret: process.env.BETTER_AUTH_SECRET,
       baseURL: process.env.BETTER_AUTH_URL,
     })
