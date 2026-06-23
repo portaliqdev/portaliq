@@ -1,9 +1,8 @@
 import { getServices } from "@/lib/di";
 import { ORG_ID } from "@/lib/constants";
-import { BoardClient } from "@/features/recruiting-board/BoardClient";
+import { BoardClient, type BoardEntryMeta } from "@/features/recruiting-board/BoardClient";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Columns3 } from "lucide-react";
-import type { RecruitingPriority } from "@/types/recruiting-workflow";
 
 export const dynamic = "force-dynamic";
 
@@ -16,12 +15,12 @@ export default async function BoardPage() {
   if (!view) {
     return <EmptyState icon={Columns3} title="No board yet" description="Create a board to start tracking prospects." />;
   }
-  const workflowPriority: Record<string, RecruitingPriority> = Object.fromEntries(
-    workflows.map((w) => [w.playerId, w.priority]),
+  const workflowMeta: Record<string, BoardEntryMeta> = Object.fromEntries(
+    workflows.map((w) => [w.playerId, { priority: w.priority, ownerName: w.owner?.name ?? null }]),
   );
   return (
     <div className="h-full">
-      <BoardClient view={view} workflowPriority={workflowPriority} />
+      <BoardClient view={view} workflowMeta={workflowMeta} />
     </div>
   );
 }

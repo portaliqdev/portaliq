@@ -51,7 +51,7 @@ export class BoardService {
   }
 
   /** Add a player from the portal onto the default board in WATCHING. */
-  async addPlayer(orgId: string, playerId: string, stage: BoardStage = "WATCHING"): Promise<BoardEntry | null> {
+  async addPlayer(orgId: string, playerId: string, stage: BoardStage = "NEEDS_REVIEW"): Promise<BoardEntry | null> {
     const board = await this.board.getDefaultBoard(orgId);
     const player = await this.players.get(playerId);
     if (!board || !player) return null;

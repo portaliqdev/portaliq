@@ -71,7 +71,7 @@ export class DashboardService {
       .slice(0, 6);
 
     const priorityEntries = entries
-      .filter((e) => ["OFFER_EXTENDED", "PRIORITY", "CONTACTED"].includes(e.canonicalStage))
+      .filter((e) => ["OFFER_EXTENDED", "VISIT_SCHEDULED", "MUTUAL_INTEREST", "CONTACTED"].includes(e.canonicalStage))
       .sort((a, b) => (b.playerStamp.fitScore ?? 0) - (a.playerStamp.fitScore ?? 0));
     const priorityRecruits = priorityEntries
       .map((e) => playerById.get(e.playerId))

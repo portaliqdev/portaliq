@@ -24,8 +24,8 @@ import { ORG_ID, CURRENT_SEASON } from "@/lib/constants";
 const BOARD_ID = "board_2026_winter";
 const OWNER = "u_dpp";
 const STAGE_PLAN: [(typeof BOARD_STAGE_ORDER)[number], number][] = [
-  ["OFFER_EXTENDED", 6], ["PRIORITY", 9], ["CONTACTED", 10],
-  ["EVALUATING", 14], ["WATCHING", 13], ["COMMITTED", 4], ["LOST", 2],
+  ["OFFER_EXTENDED", 6], ["VISIT_SCHEDULED", 4], ["MUTUAL_INTEREST", 9], ["CONTACTED", 10],
+  ["EVALUATING", 14], ["NEEDS_REVIEW", 9], ["COMMITTED", 4], ["LOST", 2],
 ];
 
 function clean<T extends Record<string, unknown>>(row: T): Record<string, unknown> {

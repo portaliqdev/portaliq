@@ -39,8 +39,8 @@ export const PortalStatus = z.enum([
 export type PortalStatus = z.infer<typeof PortalStatus>;
 
 export const BoardStage = z.enum([
-  "WATCHING", "EVALUATING", "CONTACTED", "PRIORITY",
-  "OFFER_EXTENDED", "COMMITTED", "LOST",
+  "NEEDS_REVIEW", "EVALUATING", "CONTACTED", "MUTUAL_INTEREST",
+  "VISIT_SCHEDULED", "OFFER_EXTENDED", "COMMITTED", "LOST",
 ]);
 export type BoardStage = z.infer<typeof BoardStage>;
 
