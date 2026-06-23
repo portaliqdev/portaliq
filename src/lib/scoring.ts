@@ -216,3 +216,123 @@ export function findSimilar(target: Player, pool: Player[], n = 5): Player[] {
     .slice(0, n)
     .map((x) => x.p);
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Roster impact — how adding one player changes a position room's strength
+ * ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * On-field contributors per position (starters + immediate rotation), NOT total
+ * roster bodies. A "room score" should reflect who actually plays, so the model
+ * weights the rotation — a depth chart of 16 corners is still won or lost by the
+ * top three. Defaults to 2 for anything unlisted.
+ */
+export const ROOM_ROTATION: Partial<Record<PositionCode, number>> = {
+  QB: 1, RB: 2, WR: 4, TE: 2, FB: 1,
+  OT: 2, OG: 2, C: 1,
+  DT: 2, EDGE: 2, NT: 1,
+  LB: 2, ILB: 2, OLB: 2,
+  CB: 3, S: 2, NB: 1,
+  K: 1, P: 1, LS: 1, KR: 1, PR: 1,
+};
+
+/** A missing rotation body counts as replacement level when scoring a thin room. */
+const REPLACEMENT_GRADE = 40;
+
+/**
+ * Project a returning roster slot onto a 0–100 contribution grade. Uses the
+ * stored projectedGrade when present; otherwise derives one from depth rank and
+ * starter status (the ingest path does not grade every walk-on).
+ */
+export function slotContributionGrade(slot: {
+  projectedGrade?: number;
+  starter?: boolean;
+  depthRank: number;
+  departureRisk?: string;
+}): number {
+  if (slot.projectedGrade != null) return clamp(slot.projectedGrade);
+  // No stored grade (e.g. OT/K/P/LS): derive one that decays down the depth
+  // chart so a room isn't a flat line — otherwise no transfer can stand out.
+  let g = 56 - (slot.depthRank - 1) * 4;
+  if (slot.starter) g += 2;
+  if (slot.departureRisk === "HIGH") g -= 3;
+  return clamp(Math.round(g), 30, 82);
+}
+
+/**
+ * A portal candidate's projected contribution grade, on the SAME 0–100 scale as
+ * roster slots: blends real production, scheme fit, and recruiting pedigree, then
+ * regresses 15% toward the mean so a single strong season is not over-trusted.
+ */
+export function candidateContributionGrade(player: Player, org: Organization): number {
+  const production = player.productionScore ?? 50;
+  const scheme = schemeFitScore(player, org);
+  const pedigree = pedigreeScore(player.compositeRating);
+  const raw = production * 0.5 + scheme * 0.3 + pedigree * 0.2;
+  return clamp(Math.round(raw * 0.85 + 50 * 0.15));
+}
+
+/**
+ * Weighted strength of a position room (0–100): the rotation's grades, top-
+ * weighted, with replacement-level fill for missing bodies.
+ */
+export function roomScore(grades: number[], position: PositionCode): number {
+  const rotation = (ROOM_ROTATION[position] ?? 2) + 1; // starters + a swing backup
+  const sorted = [...grades].sort((a, b) => b - a);
+  let num = 0;
+  let den = 0;
+  for (let i = 0; i < rotation; i++) {
+    const w = Math.max(0.18, 1 - i * 0.22);
+    num += (sorted[i] ?? REPLACEMENT_GRADE) * w;
+    den += w;
+  }
+  return Math.round(num / den);
+}
+
+export type ProjectedRole = "DAY_1_STARTER" | "ROTATION" | "DEPTH";
+
+export interface RosterImpact {
+  position: PositionCode;
+  currentRoom: number;
+  projectedRoom: number;
+  net: number;
+  candidateGrade: number;
+  rotationRank: number; // 1-based rank among the room after adding the player
+  role: ProjectedRole;
+  reasons: string[];
+}
+
+/** Compute the full before→after roster impact of adding `player` to its room. */
+export function computeRosterImpact(args: {
+  player: Player;
+  org: Organization;
+  roomGrades: number[]; // existing slot contribution grades for the position
+  position: PositionCode;
+  needScore: number; // 0–100 positional need
+}): RosterImpact {
+  const { player, org, roomGrades, position, needScore } = args;
+  const candidateGrade = candidateContributionGrade(player, org);
+  const currentRoom = roomScore(roomGrades, position);
+  const projectedRoom = roomScore([...roomGrades, candidateGrade], position);
+  const net = projectedRoom - currentRoom;
+
+  const starters = ROOM_ROTATION[position] ?? 2;
+  const rotationRank = roomGrades.filter((g) => g > candidateGrade).length + 1;
+  const role: ProjectedRole =
+    rotationRank <= starters ? "DAY_1_STARTER" : rotationRank <= starters + 1 ? "ROTATION" : "DEPTH";
+
+  const reasons: string[] = [];
+  const production = player.productionScore ?? 50;
+  if (production >= 70) reasons.push(`Strong production (${Math.round(production)} percentile)`);
+  else if (production >= 55) reasons.push(`Solid production (${Math.round(production)} percentile)`);
+  const scheme = schemeFitScore(player, org);
+  if (scheme >= 68) reasons.push("Strong scheme fit");
+  if (needScore >= 75) reasons.push("Fills a critical positional need");
+  else if (needScore >= 55) reasons.push("Addresses a high positional need");
+  if (player.eligibility.yearsRemaining >= 2) {
+    reasons.push(`${player.eligibility.yearsRemaining} years of eligibility remaining`);
+  }
+  if (reasons.length === 0) reasons.push("Adds graded depth to the room");
+
+  return { position, currentRoom, projectedRoom, net, candidateGrade, rotationRank, role, reasons };
+}

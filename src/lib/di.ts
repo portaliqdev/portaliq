@@ -29,6 +29,7 @@ import { TeamNeedsService } from "@/services/team-needs.service";
 import { DashboardService } from "@/services/dashboard.service";
 import { ReportsService } from "@/services/reports.service";
 import { RecruitingWorkflowService } from "@/services/recruiting-workflow.service";
+import { RosterImpactService } from "@/services/roster-impact.service";
 import type { Services } from "@/services";
 
 import { MockPortalTools, createAIProvider } from "@/ai";
@@ -85,10 +86,11 @@ function buildServices(repos: Repositories): Services {
   );
   const reports = new ReportsService(repos.players);
   const workflow = new RecruitingWorkflowService(repos.workflows, repos.players);
+  const rosterImpact = new RosterImpactService(repos.teamNeeds, repos.orgs);
   const tools = new MockPortalTools(search, teamNeeds, repos.players, repos.orgs, workflow);
   const ai = createAIProvider(tools);
 
-  return { fitScore, search, board, teamNeeds, dashboard, reports, workflow, ai };
+  return { fitScore, search, board, teamNeeds, dashboard, reports, workflow, rosterImpact, ai };
 }
 
 // Singletons — built once per runtime.

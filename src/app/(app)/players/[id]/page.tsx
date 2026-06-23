@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServices } from "@/lib/di";
+import { ORG_ID } from "@/lib/constants";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { FitDial } from "@/components/domain/FitScore";
 import { PositionPill } from "@/components/domain/PositionPill";
@@ -16,6 +17,7 @@ import { ScoutingReportCard } from "@/features/player-profile/ScoutingReportCard
 import { AddToBoardButton } from "@/features/player-profile/AddToBoardButton";
 import { AvailabilityControl } from "@/features/player-profile/AvailabilityControl";
 import { WorkflowPanel } from "@/features/player-profile/WorkflowPanel";
+import { RosterImpactCard } from "@/features/player-profile/RosterImpactCard";
 import { Badge } from "@/components/ui/Badge";
 import { formatHeight, formatWeight, longDate, fmt, clamp } from "@/lib/utils";
 import { pedigreeScore } from "@/lib/scoring";
@@ -83,6 +85,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
   if (!detail) notFound();
   const report = await services.ai.generateScoutingReport(params.id);
   const workflow = await services.workflow.getByPlayer(params.id);
+  const rosterImpact = await services.rosterImpact.forPlayer(ORG_ID, detail.player);
 
   const { player: p, stats, measurements, film, transfers, previousSchools, similar, evaluations, fit } = detail;
   const latest = stats[0];
@@ -274,6 +277,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
         {/* Decision rail */}
         <div className="space-y-6">
           <WorkflowPanel playerId={p.id} initial={workflow} />
+          {rosterImpact && <RosterImpactCard impact={rosterImpact} />}
           <Card>
             <div className="space-y-3 p-4">
               <AddToBoardButton playerId={p.id} />

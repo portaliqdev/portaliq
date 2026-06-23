@@ -7,6 +7,7 @@ import { PositionPill } from "@/components/domain/PositionPill";
 import { FitScoreBadge } from "@/components/domain/FitScore";
 import { PriorityBadge, RiskBadge } from "@/components/domain/StatusBadge";
 import { PercentileBar } from "@/components/domain/PercentileBar";
+import { RosterImpactChip } from "@/features/player-profile/RosterImpactCard";
 import { fmt } from "@/lib/utils";
 import { Sparkles, Target, ArrowRight } from "lucide-react";
 
@@ -30,6 +31,10 @@ export default async function NeedsPage() {
     services.ai.analyzeTeamNeeds(),
   ]);
   const { needs, depthChart, summary } = view;
+  const impacts = await services.rosterImpact.forPlayers(
+    ORG_ID,
+    recs.flatMap((r) => r.targets),
+  );
 
   return (
     <>
@@ -113,12 +118,17 @@ export default async function NeedsPage() {
                     <PositionPill code={need.position} size="sm" />
                     <PriorityBadge priority={need.priority} />
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     {targets.map((t) => (
-                      <Link key={t.id} href={`/players/${t.id}`} className="flex items-center gap-2 rounded px-1 py-1 hover:bg-surface-2">
-                        <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">{t.fullName}</span>
-                        <span className="text-[11px] text-ink-muted">{t.currentSchool.name}</span>
-                        <FitScoreBadge score={t.fitScore} size="sm" />
+                      <Link key={t.id} href={`/players/${t.id}`} className="block rounded px-1 py-1 hover:bg-surface-2">
+                        <div className="flex items-center gap-2">
+                          <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">{t.fullName}</span>
+                          <span className="text-[11px] text-ink-muted">{t.currentSchool.name}</span>
+                          <FitScoreBadge score={t.fitScore} size="sm" />
+                        </div>
+                        {impacts.get(t.id) && (
+                          <div className="mt-1"><RosterImpactChip impact={impacts.get(t.id)!} /></div>
+                        )}
                       </Link>
                     ))}
                     {targets.length === 0 && <div className="text-[12px] text-ink-muted">No portal options at this position.</div>}
