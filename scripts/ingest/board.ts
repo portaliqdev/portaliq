@@ -71,11 +71,18 @@ async function main() {
     updatedAt: now,
   }));
 
+  // Spread time-in-stage so the dashboard's "stuck too long" signal is realistic
+  // (a fresh seed would otherwise stamp every card with today's date).
+  const baseMs = Date.now();
+  const AGE_SPREAD = [1, 2, 3, 5, 8, 13, 21, 34]; // days-in-stage, deterministic by index
+  const daysAgoIso = (d: number) => new Date(baseMs - d * 86_400_000).toISOString();
+
   const entries: (typeof entriesTbl.$inferInsert)[] = [];
   let ci = 0;
   for (const [stage, n] of STAGE_PLAN) {
     for (let k = 0; k < n && ci < candidates.length; k++, ci++) {
       const p = candidates[ci];
+      const changedAt = daysAgoIso(AGE_SPREAD[ci % AGE_SPREAD.length]);
       entries.push({
         id: `be_${p.id}`,
         orgId: ORG_ID,
@@ -88,8 +95,8 @@ async function main() {
         rank: k + 1,
         positionColumn: p.primaryPosition,
         flags: (p.undervaluation ?? 0) >= 20 ? ["UNDERVALUED"] : [],
-        stageHistory: [{ stageId: stageId(stage), canonicalStage: stage, at: now }],
-        stageChangedAt: now,
+        stageHistory: [{ stageId: stageId(stage), canonicalStage: stage, at: changedAt }],
+        stageChangedAt: changedAt,
         createdAt: now,
         updatedAt: now,
       });

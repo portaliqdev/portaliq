@@ -6,6 +6,7 @@ import type { DashboardService } from "./dashboard.service";
 import type { ReportsService } from "./reports.service";
 import type { RecruitingWorkflowService } from "./recruiting-workflow.service";
 import type { RosterImpactService } from "./roster-impact.service";
+import type { ActionsService } from "./actions.service";
 import type { AIProvider } from "@/ai";
 
 /** The full service surface the DI container exposes to hooks. */
@@ -18,6 +19,7 @@ export interface Services {
   reports: ReportsService;
   workflow: RecruitingWorkflowService;
   rosterImpact: RosterImpactService;
+  actions: ActionsService;
   ai: AIProvider;
 }
 
@@ -29,3 +31,4 @@ export type { DashboardData, DashboardKpis, DashboardAlert, RecentEval } from ".
 export type { PositionRanking, ConferenceRow } from "./reports.service";
 export type { RecruitingWorkflowMetrics } from "./recruiting-workflow.service";
 export type { RosterImpact, ProjectedRole } from "./roster-impact.service";
+export type { ActionGroup, ActionItem, ActionTone } from "./actions.service";
