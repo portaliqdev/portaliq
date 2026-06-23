@@ -22,10 +22,11 @@ export const PORTAL_STATUS_META: Record<PortalStatus, { label: string; tone: Ton
 };
 
 export const BOARD_STAGE_META: Record<BoardStage, { label: string; tone: Tone }> = {
-  WATCHING: { label: "Watching", tone: "watching" },
+  NEEDS_REVIEW: { label: "Needs Review", tone: "watching" },
   EVALUATING: { label: "Evaluating", tone: "evaluating" },
   CONTACTED: { label: "Contacted", tone: "contacted" },
-  PRIORITY: { label: "Priority", tone: "gold" },
+  MUTUAL_INTEREST: { label: "Mutual Interest", tone: "gold" },
+  VISIT_SCHEDULED: { label: "Visit Scheduled", tone: "info" },
   OFFER_EXTENDED: { label: "Offer Extended", tone: "offer" },
   COMMITTED: { label: "Committed", tone: "commit" },
   LOST: { label: "Lost", tone: "lost" },

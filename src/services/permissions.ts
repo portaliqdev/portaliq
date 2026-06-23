@@ -12,7 +12,8 @@ export function canMoveToStage(role: StaffRole, stage: BoardStage): boolean {
   if (stage === "COMMITTED") {
     return ["HEAD_COACH", "COORDINATOR", "PERSONNEL_DIRECTOR", "ADMIN"].includes(role);
   }
-  // Watching / Evaluating / Contacted / Priority / Lost — any non-viewer staff.
+  // Needs Review / Evaluating / Contacted / Mutual Interest / Visit Scheduled /
+  // Lost — any non-viewer staff may move cards within the pipeline.
   return true;
 }
 

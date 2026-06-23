@@ -435,10 +435,11 @@ function needForPosition(needs: Map<PositionCode, PositionNeed>, code: PositionC
  * ────────────────────────────────────────────────────────────────────────── */
 
 const STAGE_TO_STATUS: Record<BoardStage, RecruitingStatus> = {
-  WATCHING: "EVALUATING",
+  NEEDS_REVIEW: "EVALUATING",
   EVALUATING: "EVALUATING",
   CONTACTED: "TARGET",
-  PRIORITY: "TARGET",
+  MUTUAL_INTEREST: "TARGET",
+  VISIT_SCHEDULED: "HOT",
   OFFER_EXTENDED: "HOT",
   COMMITTED: "COMMITTED_TO_US",
   LOST: "LOST",
@@ -543,7 +544,7 @@ export function generateMockDB(seed = 20260616, count = 320): MockDB {
 
   // 6) Board — stages + entries for the strongest available prospects
   const stages: RecruitingStage[] = (
-    ["WATCHING", "EVALUATING", "CONTACTED", "PRIORITY", "OFFER_EXTENDED", "COMMITTED", "LOST"] as BoardStage[]
+    ["NEEDS_REVIEW", "EVALUATING", "CONTACTED", "MUTUAL_INTEREST", "VISIT_SCHEDULED", "OFFER_EXTENDED", "COMMITTED", "LOST"] as BoardStage[]
   ).map((s, i) => ({
     id: `stage_${s.toLowerCase()}`,
     orgId: ORG_ID,
@@ -577,8 +578,8 @@ export function generateMockDB(seed = 20260616, count = 320): MockDB {
     .slice(0, 58);
 
   const STAGE_PLAN: [BoardStage, number][] = [
-    ["OFFER_EXTENDED", 6], ["PRIORITY", 9], ["CONTACTED", 10],
-    ["EVALUATING", 14], ["WATCHING", 12], ["COMMITTED", 4], ["LOST", 3],
+    ["OFFER_EXTENDED", 6], ["VISIT_SCHEDULED", 4], ["MUTUAL_INTEREST", 9], ["CONTACTED", 10],
+    ["EVALUATING", 14], ["NEEDS_REVIEW", 8], ["COMMITTED", 4], ["LOST", 3],
   ];
   const boardEntries: BoardEntry[] = [];
   let ci = 0;
@@ -620,7 +621,7 @@ export function generateMockDB(seed = 20260616, count = 320): MockDB {
   const scoutingReports: ScoutingReport[] = [];
   const aiInsights: AIInsight[] = [];
   const evalTargets = boardEntries.filter((e) =>
-    ["OFFER_EXTENDED", "PRIORITY", "CONTACTED"].includes(e.canonicalStage),
+    ["OFFER_EXTENDED", "VISIT_SCHEDULED", "MUTUAL_INTEREST", "CONTACTED"].includes(e.canonicalStage),
   );
   for (const e of evalTargets) {
     const p = players.find((pl) => pl.id === e.playerId)!;
@@ -649,7 +650,7 @@ export function generateMockDB(seed = 20260616, count = 320): MockDB {
 
   // 8) AI insight headlines for the top board + most-undervalued players
   const insightTargets = new Set<string>([
-    ...boardEntries.filter((e) => ["OFFER_EXTENDED", "PRIORITY"].includes(e.canonicalStage)).map((e) => e.playerId),
+    ...boardEntries.filter((e) => ["OFFER_EXTENDED", "VISIT_SCHEDULED", "MUTUAL_INTEREST"].includes(e.canonicalStage)).map((e) => e.playerId),
     ...[...players].sort((a, b) => (b.undervaluation ?? 0) - (a.undervaluation ?? 0)).slice(0, 20).map((p) => p.id),
   ]);
   for (const pid of insightTargets) {

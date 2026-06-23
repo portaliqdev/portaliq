@@ -9,15 +9,16 @@ import {
 export { BoardStage };
 
 export const BOARD_STAGE_ORDER: z.infer<typeof BoardStage>[] = [
-  "WATCHING", "EVALUATING", "CONTACTED", "PRIORITY",
-  "OFFER_EXTENDED", "COMMITTED", "LOST",
+  "NEEDS_REVIEW", "EVALUATING", "CONTACTED", "MUTUAL_INTEREST",
+  "VISIT_SCHEDULED", "OFFER_EXTENDED", "COMMITTED", "LOST",
 ];
 
 export const BOARD_STAGE_LABEL: Record<z.infer<typeof BoardStage>, string> = {
-  WATCHING: "Watching",
+  NEEDS_REVIEW: "Needs Review",
   EVALUATING: "Evaluating",
   CONTACTED: "Contacted",
-  PRIORITY: "Priority",
+  MUTUAL_INTEREST: "Mutual Interest",
+  VISIT_SCHEDULED: "Visit Scheduled",
   OFFER_EXTENDED: "Offer Extended",
   COMMITTED: "Committed",
   LOST: "Lost",
