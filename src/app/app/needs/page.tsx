@@ -7,21 +7,12 @@ import { PositionPill } from "@/components/domain/PositionPill";
 import { FitScoreBadge } from "@/components/domain/FitScore";
 import { PriorityBadge, RiskBadge } from "@/components/domain/StatusBadge";
 import { PercentileBar } from "@/components/domain/PercentileBar";
+import { Stat } from "@/components/ui/Stat";
 import { RosterImpactChip } from "@/features/player-profile/RosterImpactCard";
 import { fmt } from "@/lib/utils";
 import { Sparkles, Target, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
-
-function Kpi({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
-  return (
-    <Card className="px-4 py-3">
-      <div className="eyebrow">{label}</div>
-      <div className="mt-1 font-display text-stat-xl font-bold tnum text-ink">{value}</div>
-      {hint && <div className="text-[11px] text-ink-muted">{hint}</div>}
-    </Card>
-  );
-}
 
 export default async function NeedsPage() {
   const services = getServices();
@@ -44,19 +35,19 @@ export default async function NeedsPage() {
         description="Per-position need scoring from the latest roster snapshot, projected departures, and incoming commits."
       />
       <div className="space-y-6 p-6">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          <Kpi label="Critical Needs" value={summary.critical} hint="positions" />
-          <Kpi label="High Needs" value={summary.high} hint="positions" />
-          <Kpi label="Total Depth Gaps" value={summary.totalGaps} hint="below ideal" />
-          <Kpi label="Open Scholarships" value={summary.availableScholarships} hint="projected" />
-          <Kpi label="Scholarships" value={`${summary.scholarshipsUsed}/${summary.scholarshipLimit}`} hint="on roster" />
+        <div className="grid grid-cols-2 gap-3 stagger sm:grid-cols-3 lg:grid-cols-5">
+          <Stat label="Critical Needs" value={summary.critical} hint="positions" accent />
+          <Stat label="High Needs" value={summary.high} hint="positions" />
+          <Stat label="Total Depth Gaps" value={summary.totalGaps} hint="below ideal" />
+          <Stat label="Open Scholarships" value={summary.availableScholarships} hint="projected" />
+          <Stat label="Scholarships" value={`${summary.scholarshipsUsed}/${summary.scholarshipLimit}`} hint="on roster" />
         </div>
 
         {/* AI analysis */}
         <Card>
           <CardHeader
             eyebrow="Intelligence"
-            title={<span className="inline-flex items-center gap-1.5"><Sparkles size={15} className="text-md-gold" /> AI Roster Analysis</span>}
+            title={<span className="inline-flex items-center gap-1.5"><Sparkles size={15} className="text-amber-400" /> AI Roster Analysis</span>}
           />
           <div className="space-y-3 p-4">
             <p className="font-display text-[15px] font-semibold text-ink">{analysis.headline}</p>
@@ -66,7 +57,7 @@ export default async function NeedsPage() {
                 <div key={pr.position} className="rounded-md border border-hairline bg-surface-2 p-2.5">
                   <div className="flex items-center justify-between">
                     <PositionPill code={pr.position as never} size="sm" />
-                    <span className="font-display text-[15px] font-bold tnum text-md-gold">{pr.needScore}</span>
+                    <span className="font-display text-[15px] font-bold tnum text-amber-400">{pr.needScore}</span>
                   </div>
                   <p className="mt-1 text-[11.5px] text-ink-muted">{pr.rationale}</p>
                 </div>
@@ -120,7 +111,7 @@ export default async function NeedsPage() {
                   </div>
                   <div className="space-y-1.5">
                     {targets.map((t) => (
-                      <Link key={t.id} href={`/players/${t.id}`} className="block rounded px-1 py-1 hover:bg-surface-2">
+                      <Link key={t.id} href={`/app/players/${t.id}`} className="block rounded-md px-1 py-1 transition-colors hover:bg-surface-2">
                         <div className="flex items-center gap-2">
                           <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">{t.fullName}</span>
                           <span className="text-[11px] text-ink-muted">{t.currentSchool.name}</span>
@@ -141,7 +132,7 @@ export default async function NeedsPage() {
 
         {/* Depth chart */}
         <Card>
-          <CardHeader eyebrow="Latest snapshot" title="Depth Chart" action={<Link href="/portal" className="inline-flex items-center gap-1 text-[12px] text-md-red hover:underline">Fill gaps <ArrowRight size={12} /></Link>} />
+          <CardHeader eyebrow="Latest snapshot" title="Depth Chart" action={<Link href="/app/portal" className="inline-flex items-center gap-1 text-[12px] font-medium text-brand-500 transition-colors hover:text-brand-400">Fill gaps <ArrowRight size={12} /></Link>} />
           <div className="grid grid-cols-1 gap-px bg-hairline md:grid-cols-2">
             {depthChart.positions.map((pos) => (
               <div key={pos.position} className="bg-surface-1 p-3">

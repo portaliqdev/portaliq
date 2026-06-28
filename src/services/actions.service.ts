@@ -73,12 +73,12 @@ export class ActionsService {
         title: "High-fit prospects to review",
         detail: `${toReview.length} on the board awaiting a first evaluation`,
         count: toReview.length,
-        cta: { label: "Open board", href: "/board" },
+        cta: { label: "Open board", href: "/app/board" },
         items: toReview.slice(0, 4).map((e) => ({
           id: e.playerId,
           label: e.playerStamp.fullName,
           sublabel: `${e.playerStamp.primaryPosition} · ${e.playerStamp.fitScore ?? "—"} fit`,
-          href: `/players/${e.playerId}`,
+          href: `/app/players/${e.playerId}`,
         })),
       });
     }
@@ -94,12 +94,12 @@ export class ActionsService {
         title: "Follow-ups due",
         detail: `${due.length} tracked ${due.length === 1 ? "prospect needs" : "prospects need"} a next touch`,
         count: due.length,
-        cta: { label: "Open board", href: "/board" },
+        cta: { label: "Open board", href: "/app/board" },
         items: due.slice(0, 4).map((w) => ({
           id: w.playerId,
           label: w.playerName,
           sublabel: w.nextAction ?? "Follow up",
-          href: `/players/${w.playerId}`,
+          href: `/app/players/${w.playerId}`,
         })),
       });
     }
@@ -114,12 +114,12 @@ export class ActionsService {
         title: "Critical needs with no active target",
         detail: `No prospect past Contacted at ${uncovered.map((n) => n.position).join(", ")}`,
         count: uncovered.length,
-        cta: { label: "Analyze needs", href: "/needs" },
+        cta: { label: "Analyze needs", href: "/app/needs" },
         items: uncovered.slice(0, 4).map((n) => ({
           id: n.position,
           label: `${n.position} room`,
           sublabel: `${n.projectedReturning}/${n.idealDepth} projected to return`,
-          href: "/needs",
+          href: "/app/needs",
         })),
       });
     }
@@ -137,12 +137,12 @@ export class ActionsService {
         title: `Stuck ${STUCK_DAYS}+ days in a stage`,
         detail: `${stuck.length} ${stuck.length === 1 ? "prospect hasn't" : "prospects haven't"} moved recently`,
         count: stuck.length,
-        cta: { label: "Open board", href: "/board" },
+        cta: { label: "Open board", href: "/app/board" },
         items: stuck.slice(0, 4).map(({ e, days }) => ({
           id: e.playerId,
           label: e.playerStamp.fullName,
           sublabel: `${days}d in ${BOARD_STAGE_LABEL[e.canonicalStage]}`,
-          href: `/players/${e.playerId}`,
+          href: `/app/players/${e.playerId}`,
         })),
       });
     }
@@ -164,12 +164,12 @@ export class ActionsService {
         title: "New Moneyball values to add",
         detail: `${recs.length} undervalued portal players producing above their pedigree`,
         count: recs.length,
-        cta: { label: "Open portal", href: "/portal" },
+        cta: { label: "Open portal", href: "/app/portal" },
         items: recs.slice(0, 4).map((p) => ({
           id: p.id,
           label: p.fullName,
           sublabel: `${p.primaryPosition} · +${p.undervaluation} value`,
-          href: `/players/${p.id}`,
+          href: `/app/players/${p.id}`,
         })),
       });
     }

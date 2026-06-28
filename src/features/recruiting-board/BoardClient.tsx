@@ -10,6 +10,7 @@ import { PositionPill } from "@/components/domain/PositionPill";
 import { FitScoreBadge } from "@/components/domain/FitScore";
 import { StarRating } from "@/components/domain/StarRating";
 import { BoardStageBadge } from "@/components/domain/StatusBadge";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { WORKFLOW_PRIORITY_META, WORKFLOW_PRIORITY_ORDER } from "@/lib/workflow-meta";
 import {
   moveBoardEntryAction,
@@ -26,14 +27,14 @@ export interface BoardEntryMeta {
 }
 
 const STAGE_HEX: Record<BoardStage, string> = {
-  NEEDS_REVIEW: "#64748b",
-  EVALUATING: "#7c3aed",
-  CONTACTED: "#0891b2",
-  MUTUAL_INTEREST: "#b45309",
-  VISIT_SCHEDULED: "#0d9488",
-  OFFER_EXTENDED: "#2563eb",
-  COMMITTED: "#15803d",
-  LOST: "#94a3b8",
+  NEEDS_REVIEW: "#94a3b8",
+  EVALUATING: "#a78bfa",
+  CONTACTED: "#38bdf8",
+  MUTUAL_INTEREST: "#f6b645",
+  VISIT_SCHEDULED: "#2dd4bf",
+  OFFER_EXTENDED: "#5b8def",
+  COMMITTED: "#34d399",
+  LOST: "#6b7280",
 };
 
 const PRIORITY_DESC = [...WORKFLOW_PRIORITY_ORDER].reverse(); // CRITICAL → LOW
@@ -116,16 +117,16 @@ function Card({
         onDragStart?.(entry.id);
       }}
       className={cn(
-        "group rounded-md border border-hairline bg-surface-2 p-2.5",
-        draggable && "cursor-grab active:cursor-grabbing",
+        "group rounded-lg border border-hairline bg-surface-2 p-2.5 shadow-card transition-[border-color,box-shadow,opacity] duration-[var(--duration-fast)] hover:border-hairline-strong",
+        draggable && "cursor-grab active:cursor-grabbing active:opacity-80 active:shadow-glow",
         pending && "opacity-60",
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-1.5">
-          {draggable && <GripVertical size={13} className="shrink-0 text-ink-muted" />}
+          {draggable && <GripVertical size={13} className="shrink-0 text-ink-muted opacity-0 transition-opacity group-hover:opacity-100" />}
           <PositionPill code={s.primaryPosition} size="sm" />
-          <Link href={`/players/${entry.playerId}`} className="truncate text-[13px] font-semibold text-ink hover:text-md-red">
+          <Link href={`/app/players/${entry.playerId}`} className="truncate text-[13px] font-semibold text-ink hover:text-brand-500">
             {s.fullName}
           </Link>
         </div>
@@ -156,12 +157,12 @@ function Card({
           value={meta?.priority ?? ""}
           disabled={pending}
           onChange={(e) => setPriority(e.target.value as RecruitingPriority)}
-          className="rounded border border-hairline bg-surface-1 px-1 py-0.5 text-[11px] text-ink focus:outline-none focus:ring-1 focus:ring-md-red"
+          className="rounded-md border border-hairline bg-surface-3 px-1 py-0.5 text-[11px] text-ink focus:outline-none focus:ring-1 focus:ring-brand-500"
           title="Set priority"
         >
           <option value="" disabled>Priority</option>
           {PRIORITY_DESC.map((p) => (
-            <option key={p} value={p}>{WORKFLOW_PRIORITY_META[p].label}</option>
+            <option key={p} value={p} className="bg-surface-1">{WORKFLOW_PRIORITY_META[p].label}</option>
           ))}
         </select>
 
@@ -171,10 +172,10 @@ function Card({
           onClick={assignMe}
           title={meta?.ownerName ? `Owner: ${meta.ownerName} — click to toggle` : "Assign to me"}
           className={cn(
-            "inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium",
+            "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium transition-colors",
             meta?.ownerName
-              ? "border-md-red/30 bg-md-red/10 text-md-red"
-              : "border-hairline bg-surface-1 text-ink-sub hover:text-ink",
+              ? "border-brand-500/40 bg-brand-500/15 text-brand-500"
+              : "border-hairline bg-surface-3 text-ink-sub hover:text-ink",
           )}
         >
           <UserPlus size={11} /> {meta?.ownerName ? meta.ownerName.split(" ")[0] : "Me"}
@@ -185,7 +186,7 @@ function Card({
           disabled={pending}
           onClick={() => setNoteOpen((o) => !o)}
           title="Add note"
-          className="inline-flex items-center gap-1 rounded border border-hairline bg-surface-1 px-1.5 py-0.5 text-[11px] font-medium text-ink-sub hover:text-ink"
+          className="inline-flex items-center gap-1 rounded-md border border-hairline bg-surface-3 px-1.5 py-0.5 text-[11px] font-medium text-ink-sub transition-colors hover:text-ink"
         >
           {saved ? <Check size={11} className="text-sem-success" /> : <MessageSquarePlus size={11} />} Note
         </button>
@@ -196,19 +197,19 @@ function Card({
       </div>
 
       {noteOpen && (
-        <div className="mt-1.5 space-y-1" onDragStart={stopDrag}>
+        <div className="mt-1.5 space-y-1.5 animate-scale-in" onDragStart={stopDrag}>
           <textarea
             rows={2}
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Quick note…"
-            className="w-full rounded border border-hairline bg-surface-1 px-2 py-1 text-[12px] text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-md-red"
+            className="w-full rounded-md border border-hairline bg-surface-3 px-2 py-1 text-[12px] text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
           <button
             type="button"
             disabled={pending || !note.trim()}
             onClick={saveNote}
-            className="w-full rounded bg-md-red px-2 py-1 text-[11px] font-semibold text-white disabled:opacity-50"
+            className="w-full rounded-md bg-brand-500 px-2 py-1 text-[11px] font-semibold text-[#08090c] transition-colors hover:bg-brand-400 disabled:opacity-50"
           >
             Save note
           </button>
@@ -288,31 +289,35 @@ export function BoardClient({ view, workflowMeta }: { view: BoardView; workflowM
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline bg-base px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline bg-base px-6 py-5">
         <div>
-          <div className="eyebrow mb-1">Recruiting Board · {view.board.seasonYear} {view.board.windowType}</div>
-          <h1 className="font-display text-2xl font-bold tracking-wide text-ink">{view.board.name}</h1>
+          <div className="eyebrow mb-1.5">Recruiting Board · {view.board.seasonYear} {view.board.windowType}</div>
+          <h1 className="font-display text-[26px] font-bold tracking-tight text-ink">{view.board.name}</h1>
         </div>
         <div className="flex items-center gap-2">
           {/* Position filter */}
-          <div className="flex items-center gap-1.5 rounded-md border border-hairline bg-surface-1 px-2 py-1">
+          <div className="flex items-center gap-1.5 rounded-lg border border-hairline bg-surface-1 px-2 py-1.5">
             <Filter size={13} className="text-ink-muted" />
             <select
               value={positionFilter}
               onChange={(e) => setPositionFilter(e.target.value)}
               className="bg-transparent text-[12px] font-medium text-ink focus:outline-none"
             >
-              <option value="ALL">All positions</option>
+              <option value="ALL" className="bg-surface-1">All positions</option>
               {positions.map((p) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={p} value={p} className="bg-surface-1">{p}</option>
               ))}
             </select>
           </div>
           {/* Group-by toggle */}
-          <div className="flex items-center rounded-md border border-hairline bg-surface-1 p-0.5">
-            <ToggleBtn active={groupBy === "STAGE"} onClick={() => setGroupBy("STAGE")} icon={<Columns3 size={13} />} label="Stage" />
-            <ToggleBtn active={groupBy === "POSITION"} onClick={() => setGroupBy("POSITION")} icon={<LayoutGrid size={13} />} label="Position" />
-          </div>
+          <SegmentedControl
+            value={groupBy}
+            onChange={setGroupBy}
+            segments={[
+              { value: "STAGE", label: "Stage", icon: <Columns3 size={13} /> },
+              { value: "POSITION", label: "Position", icon: <LayoutGrid size={13} /> },
+            ]}
+          />
           <div className="hidden text-[12px] text-ink-muted sm:block">
             <span className="font-semibold text-ink tnum">{total}</span> prospects
           </div>
@@ -329,6 +334,7 @@ export function BoardClient({ view, workflowMeta }: { view: BoardView; workflowM
         <div className="flex min-h-0 flex-1 gap-3 overflow-x-auto p-4">
           {columns.map((col) => {
             const visible = col.entries.filter(matches);
+            const isHover = hoverStage === col.stage;
             return (
               <div
                 key={col.stage}
@@ -339,16 +345,19 @@ export function BoardClient({ view, workflowMeta }: { view: BoardView; workflowM
                 onDragLeave={() => setHoverStage((st) => (st === col.stage ? null : st))}
                 onDrop={() => handleDrop(col.stage)}
                 className={cn(
-                  "flex w-[260px] shrink-0 flex-col rounded-md border bg-surface-1",
-                  hoverStage === col.stage ? "border-md-red" : "border-hairline",
+                  "flex w-[268px] shrink-0 flex-col rounded-xl border bg-surface-1 transition-[border-color,box-shadow] duration-[var(--duration-fast)]",
+                  isHover ? "border-brand-500/60 shadow-glow" : "border-hairline",
                 )}
               >
                 <div className="flex items-center justify-between border-b border-hairline px-3 py-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: STAGE_HEX[col.stage] }} />
+                    <span
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: STAGE_HEX[col.stage], boxShadow: `0 0 6px ${STAGE_HEX[col.stage]}` }}
+                    />
                     <span className="font-display text-[12px] font-semibold uppercase tracking-wide text-ink">{col.label}</span>
                   </div>
-                  <span className="rounded bg-surface-3 px-1.5 text-[11px] font-semibold tnum text-ink-muted">
+                  <span className="rounded-md bg-surface-3 px-1.5 text-[11px] font-semibold tnum text-ink-muted">
                     {positionFilter === "ALL" ? col.count : visible.length}
                   </span>
                 </div>
@@ -357,7 +366,10 @@ export function BoardClient({ view, workflowMeta }: { view: BoardView; workflowM
                     <Card key={e.id} entry={e} meta={meta[e.playerId]} draggable onDragStart={setDragId} onMeta={onMeta} />
                   ))}
                   {visible.length === 0 && (
-                    <div className="rounded-md border border-dashed border-hairline px-3 py-6 text-center text-[11px] text-ink-muted">
+                    <div className={cn(
+                      "rounded-lg border border-dashed px-3 py-6 text-center text-[11px] transition-colors",
+                      isHover ? "border-brand-500/50 text-brand-500" : "border-hairline text-ink-muted",
+                    )}>
                       {positionFilter === "ALL" ? "Drop prospects here" : "None at this position"}
                     </div>
                   )}
@@ -369,13 +381,13 @@ export function BoardClient({ view, workflowMeta }: { view: BoardView; workflowM
       ) : (
         <div className="flex min-h-0 flex-1 gap-3 overflow-x-auto p-4">
           {positionColumns.map((col) => (
-            <div key={col.position} className="flex w-[260px] shrink-0 flex-col rounded-md border border-hairline bg-surface-1">
+            <div key={col.position} className="flex w-[268px] shrink-0 flex-col rounded-xl border border-hairline bg-surface-1">
               <div className="flex items-center justify-between border-b border-hairline px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <PositionPill code={col.position as never} size="sm" />
                   <span className="font-display text-[12px] font-semibold uppercase tracking-wide text-ink">{col.position} Room</span>
                 </div>
-                <span className="rounded bg-surface-3 px-1.5 text-[11px] font-semibold tnum text-ink-muted">{col.entries.length}</span>
+                <span className="rounded-md bg-surface-3 px-1.5 text-[11px] font-semibold tnum text-ink-muted">{col.entries.length}</span>
               </div>
               <div className="flex-1 space-y-2 overflow-y-auto p-2">
                 {col.entries.map((e) => (
@@ -390,20 +402,5 @@ export function BoardClient({ view, workflowMeta }: { view: BoardView; workflowM
         </div>
       )}
     </div>
-  );
-}
-
-function ToggleBtn({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-1 rounded px-2 py-1 text-[12px] font-medium",
-        active ? "bg-md-red text-white" : "text-ink-sub hover:text-ink",
-      )}
-    >
-      {icon} {label}
-    </button>
   );
 }

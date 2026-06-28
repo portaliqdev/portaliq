@@ -70,7 +70,7 @@ export default async function SettingsPage() {
           </Card>
 
           <Card>
-            <CardHeader eyebrow="Intelligence" title={<span className="inline-flex items-center gap-1.5"><Sparkles size={14} className="text-md-gold" /> AI Configuration</span>} />
+            <CardHeader eyebrow="Intelligence" title={<span className="inline-flex items-center gap-1.5"><Sparkles size={14} className="text-amber-400" /> AI Configuration</span>} />
             <div className="px-4 py-1">
               <Field label="Provider" value={<Badge tone="gold">{aiBackend === "gemini" ? "Google Gemini" : aiBackend === "anthropic" ? "Anthropic" : "Mock (deterministic)"}</Badge>} />
               <Field label="Model" value={<span className="font-mono text-[12px]">{aiBackend === "gemini" ? "gemini-2.5-flash" : aiBackend === "anthropic" ? "claude-opus-4-8" : "mock-portaliq-v1"}</span>} />
@@ -82,7 +82,7 @@ export default async function SettingsPage() {
 
         {/* Methodology — how the numbers are computed (defensible, no black box) */}
         <Card className="lg:col-span-2">
-          <CardHeader eyebrow="Transparency" title={<span className="inline-flex items-center gap-1.5"><Sparkles size={14} className="text-md-gold" /> Scoring Methodology</span>} />
+          <CardHeader eyebrow="Transparency" title={<span className="inline-flex items-center gap-1.5"><Sparkles size={14} className="text-amber-400" /> Scoring Methodology</span>} />
           <div className="grid grid-cols-1 gap-px bg-hairline sm:grid-cols-2 lg:grid-cols-4">
             {[
               { k: "Production Score", d: "0–100 percentile of a player's 2025 box-score output vs. peers at the same position group. Volume + efficiency from CFBD." },
@@ -90,7 +90,7 @@ export default async function SettingsPage() {
               { k: "Scheme Fit", d: "Maryland-specific: position-group value in our spread/RPO + nickel scheme, adjusted by measurable prototype, production, and runway." },
               { k: "Fit Score", d: "Transparent weighted blend: production 28% · scheme 22% · need 18% · eligibility 16% · pedigree 16%. No black box, no LLM." },
             ].map((m) => (
-              <div key={m.k} className="bg-surface px-4 py-3">
+              <div key={m.k} className="bg-surface-1 px-4 py-3">
                 <div className="text-[12px] font-semibold text-ink">{m.k}</div>
                 <div className="mt-1 text-[11.5px] leading-snug text-ink-muted">{m.d}</div>
               </div>

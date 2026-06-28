@@ -17,10 +17,11 @@ type Tone =
   | "lost"
   | "info";
 
+/* Dark-tuned: translucent tinted fill + luminous text + hairline ring. */
 const TONES: Record<Tone, string> = {
-  neutral: "bg-surface-2 text-ink-sub ring-hairline-strong",
-  red: "bg-md-red/15 text-md-red ring-md-red/30",
-  gold: "bg-md-gold/15 text-md-gold ring-md-gold/30",
+  neutral: "bg-white/[0.05] text-ink-sub ring-hairline-strong",
+  red: "bg-brand-500/15 text-brand-500 ring-brand-500/30",
+  gold: "bg-amber-500/15 text-amber-400 ring-amber-500/30",
   success: "bg-sem-success/15 text-sem-success ring-sem-success/30",
   commit: "bg-sem-commit/15 text-sem-commit ring-sem-commit/30",
   target: "bg-sem-target/15 text-sem-target ring-sem-target/30",
@@ -48,12 +49,12 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-semibold ring-1 ring-inset",
+        "inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[11px] font-semibold ring-1 ring-inset",
         TONES[tone],
         className,
       )}
     >
-      {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+      {dot && <span className="h-1.5 w-1.5 rounded-full bg-current shadow-[0_0_6px_currentColor]" />}
       {children}
     </span>
   );

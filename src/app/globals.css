@@ -1,132 +1,148 @@
-@import url("https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,400..600&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================================================
-   PortalIQ — Light, premium SaaS design system.
-   A deliberate reinterpretation of the "war room": white surfaces, cool-slate
-   neutrals, soft layered shadows, a single restrained blue action accent, and a
-   meaning-carrying color language for positions, recruiting state, and fit.
+   PortalIQ — "War Room OS" dark-first premium design system.
+   Deep, near-black canvas; layered surfaces lifted by light + hairline + glow;
+   a single refined blue-indigo action accent; an amber "edge" accent for the
+   Moneyball/undervalued language; luminous, meaning-carrying color for
+   positions, recruiting state, and fit. Inter precision type + mono for data.
+   Inspired by Linear / Raycast / Vercel — engineered to feel fast and intentional.
    ============================================================================ */
 
 :root {
-  /* ---- Neutral ramp (cool slate) ---------------------------------------- */
-  --gray-0: #ffffff;
-  --gray-25: #fbfbfc;
-  --gray-50: #f6f7f9;
-  --gray-100: #eef0f3;
-  --gray-200: #e3e6eb;
-  --gray-300: #d2d7de;
-  --gray-400: #a8afba;
-  --gray-500: #79818e;
-  --gray-600: #5a626e;
-  --gray-700: #3d434d;
-  --gray-800: #262b32;
-  --gray-900: #14171c;
+  color-scheme: dark;
 
-  /* ---- Brand blue (action / focus / active) ----------------------------- */
-  --brand-50: #eff4ff;
-  --brand-100: #dbe6fe;
-  --brand-200: #bdd0fd;
-  --brand-300: #93b4fb;
-  --brand-400: #6090f7;
-  --brand-500: #3b72f0;
-  --brand-600: #2563eb;
-  --brand-700: #1d4ed8;
-  --brand-800: #1e40af;
-  --brand-900: #1e3a8a;
+  /* ---- Neutral ramp (deep, cool, never pure black) ---------------------- */
+  --gray-0: #08090c; /* canvas floor */
+  --gray-25: #0a0b0e;
+  --gray-50: #0e0f13; /* app base */
+  --gray-100: #121419; /* card surface */
+  --gray-150: #171a20; /* raised / hover */
+  --gray-200: #1d2026; /* inputs / wells */
+  --gray-300: #272b33;
+  --gray-400: #3a3f49;
+  --gray-500: #6b707a; /* muted text */
+  --gray-600: #9ca1ab; /* secondary text */
+  --gray-700: #c2c6cd;
+  --gray-800: #dadde2;
+  --gray-900: #eceef0; /* primary text */
 
-  /* ---- Semantic — recruiting state -------------------------------------- */
-  --sem-success: #16a34a;
-  --sem-commit: #15803d;
-  --sem-target: #b45309;
-  --sem-contacted: #0891b2;
-  --sem-evaluating: #7c3aed;
-  --sem-watching: #64748b;
-  --sem-offer: #2563eb;
-  --sem-risk: #d97706;
-  --sem-danger: #dc2626;
-  --sem-lost: #94a3b8;
-  --sem-info: #2563eb;
-  --sem-gold: #b45309;
+  /* ---- Brand accent — refined blue-indigo (action / focus / identity) ---- */
+  --brand-50: #0d1426;
+  --brand-100: #11203f;
+  --brand-200: #1c3a6e;
+  --brand-300: #2a559c;
+  --brand-400: #3d7bff; /* strong / hover */
+  --brand-500: #5b8def; /* primary on dark */
+  --brand-600: #74a2f4;
+  --brand-700: #9bbcf8;
+  --brand-800: #c2d6fb;
+  --brand-900: #e6eefe;
+  --accent-glow: rgba(91, 141, 239, 0.32);
 
-  /* ---- Position-group color language ------------------------------------ */
-  --pos-qb: #ea580c;
-  --pos-rb: #e11d48;
-  --pos-wr: #0284c7;
-  --pos-te: #0d9488;
-  --pos-ol: #7c3aed;
-  --pos-dl: #ca8a04;
-  --pos-lb: #059669;
-  --pos-db: #4f46e5;
-  --pos-st: #475569;
+  /* ---- Amber "edge" / Moneyball ----------------------------------------- */
+  --amber-300: #fbd089;
+  --amber-400: #f8c05a;
+  --amber-500: #f6b645;
+  --amber-600: #e09a28;
 
-  /* ---- Fit-score ramp (intuitive red → emerald) ------------------------- */
-  --fit-poor: #dc2626;
-  --fit-marginal: #ea580c;
-  --fit-solid: #d4a017;
-  --fit-strong: #16a34a;
-  --fit-elite: #047857;
+  /* ---- Semantic — recruiting state (luminous dark variants) -------------- */
+  --sem-success: #34d399;
+  --sem-commit: #34d399;
+  --sem-target: #f6b645;
+  --sem-contacted: #38bdf8;
+  --sem-evaluating: #a78bfa;
+  --sem-watching: #94a3b8;
+  --sem-offer: #5b8def;
+  --sem-risk: #fbbf24;
+  --sem-danger: #f87171;
+  --sem-lost: #6b7280;
+  --sem-info: #5b8def;
+  --sem-gold: #f6b645;
+
+  /* ---- Position-group color language (luminous on dark) ------------------ */
+  --pos-qb: #fb923c;
+  --pos-rb: #fb7185;
+  --pos-wr: #38bdf8;
+  --pos-te: #2dd4bf;
+  --pos-ol: #a78bfa;
+  --pos-dl: #facc15;
+  --pos-lb: #34d399;
+  --pos-db: #818cf8;
+  --pos-st: #94a3b8;
+
+  /* ---- Fit-score ramp (intuitive red → emerald, brightened) ------------- */
+  --fit-poor: #f87171;
+  --fit-marginal: #fb923c;
+  --fit-solid: #fbbf24;
+  --fit-strong: #34d399;
+  --fit-elite: #2dd4bf;
 
   /* ---- Semantic surface / text aliases ---------------------------------- */
-  --canvas: var(--gray-25);
-  --surface-card: var(--gray-0);
+  --canvas: var(--gray-0);
+  --surface-card: var(--gray-100);
   --surface-sunken: var(--gray-50);
-  --surface-hover: var(--gray-50);
-  --surface-active: var(--brand-50);
-  --overlay: rgba(20, 23, 28, 0.45);
+  --surface-hover: var(--gray-150);
+  --surface-active: rgba(91, 141, 239, 0.12);
+  --overlay: rgba(4, 5, 8, 0.66);
 
-  --border-subtle: var(--gray-100);
-  --border-default: var(--gray-200);
-  --border-strong: var(--gray-300);
-  --border-accent: var(--brand-600);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-heavy: rgba(255, 255, 255, 0.18);
+  --border-accent: var(--brand-500);
 
   --text-primary: var(--gray-900);
   --text-secondary: var(--gray-600);
   --text-muted: var(--gray-500);
   --text-disabled: var(--gray-400);
   --text-inverse: var(--gray-0);
-  --text-brand: var(--brand-700);
+  --text-brand: var(--brand-500);
 
   --focus-ring: var(--brand-500);
 
   /* ---- Back-compat aliases for existing Tailwind/CSS-var consumers ------- */
-  --base: var(--gray-25);
-  --surface-1: var(--gray-0);
-  --surface-2: var(--gray-50);
-  --surface-3: var(--gray-100);
-  --hairline: var(--gray-200);
-  --hairline-strong: var(--gray-300);
+  --base: var(--gray-50);
+  --surface-1: var(--gray-100);
+  --surface-2: var(--gray-150);
+  --surface-3: var(--gray-200);
+  --hairline: var(--border-default);
+  --hairline-strong: var(--border-strong);
   --ink: var(--gray-900);
   --ink-sub: var(--gray-600);
   --ink-muted: var(--gray-500);
-  --md-red: var(--brand-600);
+  --md-red: var(--brand-500);
   --md-gold: var(--sem-gold);
 
-  /* ---- Elevation (soft, cool-tinted) ------------------------------------ */
-  --shadow-xs: 0 1px 2px rgba(16, 20, 28, 0.04);
-  --shadow-sm: 0 1px 3px rgba(16, 20, 28, 0.06), 0 1px 2px rgba(16, 20, 28, 0.04);
-  --shadow-md: 0 4px 12px rgba(16, 20, 28, 0.08), 0 2px 4px rgba(16, 20, 28, 0.04);
-  --shadow-lg: 0 12px 32px rgba(16, 20, 28, 0.12), 0 4px 8px rgba(16, 20, 28, 0.05);
-  --shadow-pop: 0 8px 30px rgba(16, 20, 28, 0.16);
-  --shadow-card: 0 1px 2px rgba(16, 20, 28, 0.04), 0 1px 1px rgba(16, 20, 28, 0.03);
-  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.28);
+  /* ---- Elevation (dark = surface lift + hairline highlight + soft ambient) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 1px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55), 0 6px 14px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 0 1px rgba(91, 141, 239, 0.4), 0 8px 28px rgba(91, 141, 239, 0.28);
+  --shadow-focus: 0 0 0 3px rgba(91, 141, 239, 0.35);
 
   /* ---- Motion ----------------------------------------------------------- */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast: 120ms;
-  --duration-base: 160ms;
-  --duration-slow: 200ms;
+  --duration-base: 180ms;
+  --duration-slow: 240ms;
+  --duration-page: 320ms;
 
   /* ---- Fonts ------------------------------------------------------------ */
-  --font-display: "Saira Condensed", "Oswald", "Arial Narrow", system-ui, sans-serif;
-  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
   /* ---- Layout dimensions ------------------------------------------------ */
-  --sidebar-w: 232px;
+  --sidebar-w: 236px;
   --topbar-h: 56px;
   --content-max: 1440px;
 }
@@ -136,11 +152,12 @@
     --duration-fast: 0ms;
     --duration-base: 0ms;
     --duration-slow: 0ms;
+    --duration-page: 0ms;
   }
 }
 
 * {
-  border-color: theme("colors.hairline.DEFAULT");
+  border-color: var(--border-default);
 }
 
 html,
@@ -148,13 +165,18 @@ body {
   height: 100%;
 }
 
+html {
+  background-color: var(--canvas);
+}
+
 body {
   background-color: var(--canvas);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 20px;
-  font-feature-settings: "lnum" 1;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: -0.006em;
+  font-feature-settings: "cv05" 1, "ss01" 1, "lnum" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -168,25 +190,54 @@ body {
 
 .font-display {
   font-family: var(--font-display);
+  font-weight: 680;
+  letter-spacing: -0.02em;
 }
 
 /* Eyebrow / scoreboard label */
 .eyebrow {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: 0.12em;
+  font-weight: 500;
   font-size: 0.6875rem;
-  line-height: 0.875rem;
+  line-height: 1rem;
   color: var(--text-muted);
 }
 
-/* Signature accent rail — a single thin brand-blue rail framing the sidebar. */
-.flag-rail {
-  background: var(--brand-600);
+/* Gradient ink for hero numerals / wordmarks */
+.text-gradient {
+  background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-600) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Thin, light scrollbars for data-dense tables */
+.text-gradient-brand {
+  background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-400) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hairline top highlight used on elevated surfaces */
+.edge-highlight {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Glass surface (topbar, palette, sheets) */
+.glass {
+  background: rgba(14, 15, 19, 0.72);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+}
+
+/* Signature accent rail */
+.flag-rail {
+  background: var(--brand-500);
+}
+
+/* Thin scrollbars for data-dense surfaces */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -195,19 +246,21 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
-  border: 2px solid var(--canvas);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-400);
+  background: rgba(255, 255, 255, 0.18);
+  background-clip: padding-box;
 }
 
 /* Skeleton shimmer */
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: var(--surface-sunken);
+  background: var(--surface-2);
 }
 .skeleton::after {
   content: "";
@@ -217,23 +270,150 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(37, 99, 235, 0.06),
+    rgba(255, 255, 255, 0.06),
     transparent
   );
-  animation: shimmer 1.5s infinite;
+  animation: shimmer 1.6s infinite;
 }
+
+/* ---- Keyframes --------------------------------------------------------- */
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
   }
 }
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(2%, -3%);
+  }
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Percentile / progress bar fill grows in on mount (transform = no reflow) */
+.bar-grow {
+  transform-origin: left center;
+  animation: bar-grow var(--duration-slow) var(--ease-out) both;
+}
+
+/* ---- Animation utilities ----------------------------------------------- */
+.animate-fade-up {
+  animation: fade-up var(--duration-page) var(--ease-out) both;
+}
+.animate-fade-in {
+  animation: fade-in var(--duration-slow) var(--ease-out) both;
+}
+.animate-scale-in {
+  animation: scale-in var(--duration-base) var(--ease-out) both;
+}
+
+/* Staggered children (used for grids / lists on enter) */
+.stagger > * {
+  animation: fade-up var(--duration-page) var(--ease-out) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 40ms; }
+.stagger > *:nth-child(3) { animation-delay: 80ms; }
+.stagger > *:nth-child(4) { animation-delay: 120ms; }
+.stagger > *:nth-child(5) { animation-delay: 160ms; }
+.stagger > *:nth-child(6) { animation-delay: 200ms; }
+.stagger > *:nth-child(7) { animation-delay: 240ms; }
+.stagger > *:nth-child(8) { animation-delay: 280ms; }
+
+/* Scroll-reveal: starts hidden, .is-visible (set via IntersectionObserver) reveals */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--duration-page) var(--ease-out),
+    transform var(--duration-page) var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .skeleton::after {
-    animation: none;
+  .skeleton::after,
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .stagger > *,
+  [style*="float-slow"],
+  .animate-glow-pulse {
+    animation: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
 :focus-visible {
   outline: 2px solid var(--focus-ring);
-  outline-offset: 1px;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(91, 141, 239, 0.32);
+  color: #fff;
 }

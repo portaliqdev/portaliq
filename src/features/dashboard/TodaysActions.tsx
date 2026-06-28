@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 
 const TONE_HEX: Record<ActionTone, string> = {
-  danger: "#EF4444",
-  risk: "#F59E0B",
-  target: "#FFD520",
-  info: "#60A5FA",
+  danger: "#f87171",
+  risk: "#fbbf24",
+  target: "#f6b645",
+  info: "#5b8def",
 };
 
 const GROUP_ICON: Record<string, LucideIcon> = {
@@ -34,7 +34,7 @@ export function TodaysActions({ groups }: { groups: ActionGroup[] }) {
         eyebrow="Command center"
         title={
           <span className="inline-flex items-center gap-1.5">
-            <ClipboardCheck size={15} className="text-md-red" /> Today&apos;s Portal Actions
+            <ClipboardCheck size={15} className="text-brand-500" /> Today&apos;s Portal Actions
           </span>
         }
         action={
@@ -70,7 +70,7 @@ export function TodaysActions({ groups }: { groups: ActionGroup[] }) {
                     <span className="text-[13.5px] font-semibold text-ink">{g.title}</span>
                     <Link
                       href={g.cta.href}
-                      className="ml-auto inline-flex shrink-0 items-center gap-0.5 text-[12px] font-medium text-md-red hover:underline"
+                      className="ml-auto inline-flex shrink-0 items-center gap-0.5 text-[12px] font-medium text-brand-500 transition-colors hover:text-brand-400"
                     >
                       {g.cta.label} <ArrowRight size={12} />
                     </Link>

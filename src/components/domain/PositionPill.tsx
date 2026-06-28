@@ -19,7 +19,7 @@ export function PositionPill({
         size === "sm" ? "h-5 min-w-[2rem] px-1 text-[10px]" : "h-6 min-w-[2.25rem] px-1.5 text-[11px]",
         className,
       )}
-      style={{ color: hex, backgroundColor: `${hex}22`, boxShadow: `inset 0 0 0 1px ${hex}44` }}
+      style={{ color: hex, backgroundColor: `${hex}26`, boxShadow: `inset 0 0 0 1px ${hex}55` }}
       title={POSITION_META[code].label}
     >
       {code}

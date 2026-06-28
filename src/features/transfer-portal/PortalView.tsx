@@ -12,7 +12,7 @@ import type { RecruitingStatus } from "@/types/recruiting-workflow";
 import { PositionPill } from "@/components/domain/PositionPill";
 import { FitScoreBadge } from "@/components/domain/FitScore";
 import { StarRating } from "@/components/domain/StarRating";
-import { PortalStatusBadge } from "@/components/domain/StatusBadge";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { cn, formatHeight, fmt } from "@/lib/utils";
 import { Search, LayoutGrid, List, X, TrendingUp, SlidersHorizontal } from "lucide-react";
 
@@ -34,10 +34,10 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
     <button
       onClick={onClick}
       className={cn(
-        "rounded px-2 py-1 text-[12px] font-medium transition-colors",
+        "rounded-md px-2 py-1 text-[12px] font-medium transition-colors duration-[var(--duration-fast)]",
         active
-          ? "bg-md-red text-white"
-          : "border border-hairline-strong bg-surface-2 text-ink-sub hover:text-ink",
+          ? "bg-brand-500 text-[#08090c] shadow-sm"
+          : "border border-hairline bg-surface-2 text-ink-sub hover:border-hairline-strong hover:text-ink",
       )}
     >
       {children}
@@ -48,7 +48,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-hairline px-4 py-3">
-      <div className="eyebrow mb-2">{title}</div>
+      <div className="eyebrow mb-2.5">{title}</div>
       {children}
     </div>
   );
@@ -127,12 +127,12 @@ export function PortalView({
     <div className="flex h-full">
       {/* Filter rail */}
       <aside className="hidden w-64 shrink-0 overflow-y-auto border-r border-hairline bg-surface-1 md:block">
-        <div className="flex items-center justify-between border-b border-hairline px-4 py-3">
-          <span className="inline-flex items-center gap-1.5 font-display text-[13px] font-semibold uppercase tracking-wide text-ink">
-            <SlidersHorizontal size={14} /> Filters
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-hairline bg-surface-1 px-4 py-3">
+          <span className="inline-flex items-center gap-1.5 font-display text-[13px] font-semibold tracking-tight text-ink">
+            <SlidersHorizontal size={14} className="text-ink-muted" /> Filters
           </span>
           {activeCount > 0 && (
-            <button onClick={reset} className="inline-flex items-center gap-1 text-[11px] text-md-red hover:underline">
+            <button onClick={reset} className="inline-flex items-center gap-1 text-[11px] text-brand-500 hover:text-brand-400">
               <X size={11} /> Clear ({activeCount})
             </button>
           )}
@@ -158,7 +158,10 @@ export function PortalView({
           </div>
           <button
             onClick={() => setPowerOnly((v) => !v)}
-            className={cn("mt-2 w-full rounded px-2 py-1.5 text-[12px] font-medium", powerOnly ? "bg-md-gold text-ink-inverse" : "border border-hairline-strong text-ink-sub")}
+            className={cn(
+              "mt-2.5 w-full rounded-md px-2 py-1.5 text-[12px] font-semibold transition-colors",
+              powerOnly ? "bg-amber-500 text-[#1a1205]" : "border border-hairline bg-surface-2 text-ink-sub hover:text-ink",
+            )}
           >
             Power 4 only
           </button>
@@ -181,9 +184,9 @@ export function PortalView({
             max={4}
             value={minYears}
             onChange={(e) => setMinYears(Number(e.target.value))}
-            className="w-full accent-md-red"
+            className="w-full accent-brand-500"
           />
-          <div className="mt-1 flex justify-between text-[10px] text-ink-muted">
+          <div className="mt-1 flex justify-between text-[10px] text-ink-muted tnum">
             {[0, 1, 2, 3, 4].map((y) => (
               <span key={y}>{y}</span>
             ))}
@@ -194,18 +197,20 @@ export function PortalView({
           <div className="flex items-center gap-2">
             <input
               type="number"
+              inputMode="numeric"
               placeholder="min"
               value={minWeight}
               onChange={(e) => setMinWeight(e.target.value === "" ? "" : Number(e.target.value))}
-              className="w-full rounded border border-hairline-strong bg-base px-2 py-1 text-[12px] tnum"
+              className="w-full rounded-md border border-hairline bg-surface-3 px-2 py-1 text-[12px] tnum text-ink placeholder:text-ink-muted focus:border-brand-500 focus:outline-none"
             />
             <span className="text-ink-muted">–</span>
             <input
               type="number"
+              inputMode="numeric"
               placeholder="max"
               value={maxWeight}
               onChange={(e) => setMaxWeight(e.target.value === "" ? "" : Number(e.target.value))}
-              className="w-full rounded border border-hairline-strong bg-base px-2 py-1 text-[12px] tnum"
+              className="w-full rounded-md border border-hairline bg-surface-3 px-2 py-1 text-[12px] tnum text-ink placeholder:text-ink-muted focus:border-brand-500 focus:outline-none"
             />
           </div>
         </Section>
@@ -223,7 +228,10 @@ export function PortalView({
         <Section title="Moneyball">
           <button
             onClick={() => setUndervaluedOnly((v) => !v)}
-            className={cn("inline-flex w-full items-center justify-center gap-1.5 rounded px-2 py-1.5 text-[12px] font-medium", undervaluedOnly ? "bg-md-gold text-ink-inverse" : "border border-hairline-strong text-ink-sub")}
+            className={cn(
+              "inline-flex w-full items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-[12px] font-semibold transition-colors",
+              undervaluedOnly ? "bg-amber-500 text-[#1a1205]" : "border border-hairline bg-surface-2 text-ink-sub hover:text-ink",
+            )}
           >
             <TrendingUp size={13} /> Undervalued only
           </button>
@@ -233,38 +241,38 @@ export function PortalView({
       {/* Results */}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Toolbar */}
-        <div className="flex items-center gap-3 border-b border-hairline bg-base px-4 py-2.5">
+        <div className="glass sticky top-0 z-10 flex items-center gap-3 border-b border-hairline px-4 py-2.5">
           <div className="relative max-w-xs flex-1">
             <Search size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search name, school…"
-              className="h-8 w-full rounded-md border border-hairline-strong bg-surface-1 pl-8 pr-3 text-[13px] focus:border-md-red focus:outline-none"
+              className="h-8 w-full rounded-lg border border-hairline bg-surface-2 pl-8 pr-3 text-[13px] text-ink placeholder:text-ink-muted focus:border-brand-500 focus:bg-surface-3 focus:outline-none"
             />
           </div>
-          <div className="text-[12px] text-ink-muted">
+          <div className="hidden text-[12px] text-ink-muted sm:block">
             <span className="font-semibold text-ink tnum">{fmt(results.length)}</span> of {fmt(players.length)}
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <label className="text-[11px] text-ink-muted">Sort</label>
+            <label className="hidden text-[11px] text-ink-muted sm:block">Sort</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortKey)}
-              className="h-8 rounded-md border border-hairline-strong bg-surface-1 px-2 text-[12px] focus:outline-none"
+              className="h-8 rounded-lg border border-hairline bg-surface-2 px-2 text-[12px] text-ink focus:border-brand-500 focus:outline-none"
             >
               {SORT_OPTIONS.map((o) => (
-                <option key={o.key} value={o.key}>{o.label}</option>
+                <option key={o.key} value={o.key} className="bg-surface-1">{o.label}</option>
               ))}
             </select>
-            <div className="flex overflow-hidden rounded-md border border-hairline-strong">
-              <button onClick={() => setView("grid")} className={cn("px-2 py-1.5", view === "grid" ? "bg-surface-3 text-ink" : "text-ink-muted")}>
-                <LayoutGrid size={14} />
-              </button>
-              <button onClick={() => setView("list")} className={cn("px-2 py-1.5", view === "list" ? "bg-surface-3 text-ink" : "text-ink-muted")}>
-                <List size={14} />
-              </button>
-            </div>
+            <SegmentedControl
+              value={view}
+              onChange={setView}
+              segments={[
+                { value: "grid", icon: <LayoutGrid size={14} />, title: "Grid" },
+                { value: "list", icon: <List size={14} />, title: "List" },
+              ]}
+            />
           </div>
         </div>
 
@@ -272,9 +280,9 @@ export function PortalView({
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           {results.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-              <p className="font-display text-[15px] font-semibold text-ink">No entrants match these filters</p>
+              <p className="font-display text-[16px] font-semibold text-ink">No entrants match these filters</p>
               <p className="text-[13px] text-ink-muted">Widen the conference, eligibility, or weight range.</p>
-              <button onClick={reset} className="mt-2 text-[12px] text-md-red hover:underline">Clear filters</button>
+              <button onClick={reset} className="mt-2 text-[12px] text-brand-500 hover:text-brand-400">Clear filters</button>
             </div>
           ) : view === "grid" ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -283,21 +291,21 @@ export function PortalView({
               ))}
             </div>
           ) : (
-            <div className="overflow-hidden rounded-md border border-hairline">
+            <div className="overflow-hidden rounded-lg border border-hairline">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr className="border-b border-hairline bg-surface-1 text-left">
+                  <tr className="border-b border-hairline bg-surface-2 text-left">
                     {["Pos", "Player", "School", "Conf", "Ht/Wt", "Yrs", "★", "Prod", "Fit"].map((h) => (
-                      <th key={h} className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">{h}</th>
+                      <th key={h} className="px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-muted">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {results.slice(0, 200).map((p) => (
-                    <tr key={p.id} className="border-b border-hairline hover:bg-surface-2">
+                    <tr key={p.id} className="border-b border-hairline transition-colors last:border-0 hover:bg-surface-2">
                       <td className="px-3 py-1.5"><PositionPill code={p.primaryPosition} size="sm" /></td>
                       <td className="px-3 py-1.5">
-                        <Link href={`/players/${p.id}`} className="font-medium text-ink hover:text-md-red">
+                        <Link href={`/app/players/${p.id}`} className="font-medium text-ink hover:text-brand-500">
                           {p.fullName}
                         </Link>
                       </td>

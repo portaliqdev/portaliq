@@ -8,7 +8,7 @@ export function StarRating({ stars, className }: { stars: number; className?: st
         <Star
           key={i}
           size={12}
-          className={i < stars ? "fill-md-gold text-md-gold" : "text-hairline-heavy"}
+          className={i < stars ? "fill-amber-500 text-amber-500" : "text-white/15"}
         />
       ))}
     </span>
