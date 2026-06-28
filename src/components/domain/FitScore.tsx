@@ -23,10 +23,14 @@ export function FitScoreBadge({
     <span className="inline-flex items-center gap-1.5">
       <span
         className={cn(
-          "inline-flex items-center justify-center rounded font-bold tnum tabular-nums",
+          "inline-flex items-center justify-center rounded-md font-bold tnum tabular-nums",
           sizes[size],
         )}
-        style={{ color: band.hex, backgroundColor: `${band.hex}1f`, boxShadow: `inset 0 0 0 1px ${band.hex}55` }}
+        style={{
+          color: band.hex,
+          backgroundColor: `${band.hex}1c`,
+          boxShadow: `inset 0 0 0 1px ${band.hex}40`,
+        }}
       >
         {score}
       </span>
@@ -35,7 +39,7 @@ export function FitScoreBadge({
   );
 }
 
-/** Circular fit dial for the player profile hero. */
+/** Circular fit dial for the player profile hero — glowing progress arc. */
 export function FitDial({ score, size = 96 }: { score?: number; size?: number }) {
   const value = score ?? 0;
   const band = fitBand(value);
@@ -44,8 +48,13 @@ export function FitDial({ score, size = 96 }: { score?: number; size?: number })
   const dash = (value / 100) * c;
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+      <div
+        aria-hidden
+        className="absolute inset-2 rounded-full blur-xl"
+        style={{ backgroundColor: `${band.hex}26` }}
+      />
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e3e6eb" strokeWidth={8} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -55,13 +64,14 @@ export function FitDial({ score, size = 96 }: { score?: number; size?: number })
           strokeWidth={8}
           strokeLinecap="round"
           strokeDasharray={`${dash} ${c - dash}`}
+          style={{ filter: `drop-shadow(0 0 6px ${band.hex}80)` }}
         />
       </svg>
       <div className="absolute flex flex-col items-center">
         <span className="font-display text-2xl font-bold tnum" style={{ color: band.hex }}>
           {score ?? "—"}
         </span>
-        <span className="text-[10px] uppercase tracking-wider text-ink-muted">Fit</span>
+        <span className="text-[10px] uppercase tracking-[0.12em] text-ink-muted">Fit</span>
       </div>
     </div>
   );

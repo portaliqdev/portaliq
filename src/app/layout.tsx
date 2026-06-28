@@ -1,10 +1,23 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PortalIQ — Moneyball for Maryland",
+  title: "PortalIQ — Transfer Portal Intelligence",
   description:
-    "AI-powered NCAA D1 College Football transfer-portal intelligence platform.",
+    "The recruiting war room for college football. AI-graded transfer-portal intelligence, fit scoring, and roster strategy — built for Power 4 programs.",
+  metadataBase: new URL("https://portaliq.app"),
+  openGraph: {
+    title: "PortalIQ — Transfer Portal Intelligence",
+    description:
+      "AI-graded transfer-portal intelligence, fit scoring, and roster strategy for college football.",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#08090c",
 };
 
 export default function RootLayout({
@@ -13,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body>{children}</body>
     </html>
   );

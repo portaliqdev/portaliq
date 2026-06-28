@@ -144,14 +144,15 @@ export const POSITION_GROUP_COLOR: Record<PositionGroup, string> = {
   ST: "text-pos-st",
 };
 
+// Luminous dark-mode position color language (mirrors --pos-* tokens in globals.css).
 export const POSITION_GROUP_HEX: Record<PositionGroup, string> = {
-  QB: "#ea580c",
-  RB: "#e11d48",
-  WR: "#0284c7",
-  TE: "#0d9488",
-  OL: "#7c3aed",
-  DL: "#ca8a04",
-  LB: "#059669",
-  DB: "#4f46e5",
-  ST: "#475569",
+  QB: "#fb923c",
+  RB: "#fb7185",
+  WR: "#38bdf8",
+  TE: "#2dd4bf",
+  OL: "#a78bfa",
+  DL: "#facc15",
+  LB: "#34d399",
+  DB: "#818cf8",
+  ST: "#94a3b8",
 };

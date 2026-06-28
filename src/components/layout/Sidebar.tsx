@@ -10,57 +10,54 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="relative flex h-full w-[232px] shrink-0 bg-surface-1">
-      {/* Signature accent rail — a single thin brand-blue rail framing the edge */}
-      <div className="w-[3px] shrink-0 bg-brand-600" aria-hidden />
-
-      <div className="flex flex-1 flex-col border-r border-hairline px-3 py-4">
+    <aside className="relative hidden h-full w-[236px] shrink-0 flex-col border-r border-hairline bg-surface-1 md:flex">
+      <div className="flex flex-1 flex-col px-3 py-4">
         {/* Logo lockup */}
-        <div className="flex items-center gap-2.5 px-1.5 pb-4">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-brand-600 text-white shadow-sm">
-            <Radar size={18} />
+        <Link href="/app" className="group mb-5 flex items-center gap-2.5 px-1.5">
+          <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-[#08090c] shadow-glow">
+            <Radar size={18} strokeWidth={2.4} />
           </span>
-          <span className="font-display text-[20px] font-bold tracking-[0.01em] text-ink">
-            Portal<span className="text-brand-600">IQ</span>
+          <span className="font-display text-[19px] font-bold tracking-tight text-ink">
+            Portal<span className="text-brand-500">IQ</span>
           </span>
-        </div>
+        </Link>
 
         {/* Nav */}
         <nav className="flex flex-1 flex-col gap-0.5">
           {NAV_ITEMS.map((item, i) => {
             const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+              item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href);
             const showDivider = i > 0 && NAV_ITEMS[i - 1].section !== item.section;
             const Icon = item.icon;
             return (
               <div key={item.href}>
-                {showDivider && <div className="mx-2 my-1.5 h-px bg-hairline" />}
+                {showDivider && <div className="mx-2 my-2 h-px bg-hairline" />}
                 <Link
                   href={item.href}
                   className={cn(
-                    "group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-semibold transition-colors",
+                    "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)]",
                     active
-                      ? "bg-brand-50 text-brand-700"
+                      ? "bg-brand-500/10 text-ink"
                       : "text-ink-sub hover:bg-surface-2 hover:text-ink",
                   )}
                 >
+                  {active && (
+                    <span className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-brand-500 shadow-glow" />
+                  )}
                   <Icon
                     size={17}
+                    strokeWidth={2.1}
                     className={cn(
-                      "shrink-0",
-                      active ? "text-brand-600" : "text-ink-muted group-hover:text-ink-sub",
+                      "shrink-0 transition-colors",
+                      active ? "text-brand-500" : "text-ink-muted group-hover:text-ink-sub",
                     )}
                   />
                   <span className="flex-1 truncate">{item.label}</span>
                   {item.count != null && (
                     <span
                       className={cn(
-                        "rounded-full px-1.5 py-px text-[10px] font-bold tnum",
-                        active
-                          ? "bg-brand-100 text-brand-700"
-                          : "bg-surface-2 text-ink-muted",
+                        "rounded-full px-1.5 py-px text-[10px] font-semibold tnum",
+                        active ? "bg-brand-500/20 text-brand-500" : "bg-surface-3 text-ink-muted",
                       )}
                     >
                       {item.count}
@@ -73,15 +70,18 @@ export function Sidebar() {
         </nav>
 
         {/* Portal-window status widget */}
-        <div className="mt-3 rounded-lg border border-hairline bg-surface-2 px-3 py-2.5">
+        <div className="mt-3 overflow-hidden rounded-lg border border-hairline bg-surface-2 px-3 py-2.5 edge-highlight">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-sem-target" />
-            <span className="font-display text-[11px] font-bold uppercase tracking-[0.06em] text-ink">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sem-risk opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-sem-risk" />
+            </span>
+            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-ink-sub">
               Winter Window
             </span>
           </div>
           <div className="mt-1.5 text-[11px] text-ink-muted">
-            Day 12 · <span className="font-bold text-sem-risk">4 days left</span> · 23 today
+            Day 12 · <span className="font-semibold text-sem-risk">4 days left</span> · 23 today
           </div>
         </div>
 
@@ -90,7 +90,7 @@ export function Sidebar() {
           <span className="eyebrow">
             {process.env.NEXT_PUBLIC_DATA_BACKEND === "postgres" ? "Live Data" : "Phase 1"}
           </span>
-          <span className="rounded bg-surface-2 px-1.5 py-0.5 text-[10px] font-medium text-ink-muted">
+          <span className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] font-medium text-ink-muted">
             {process.env.NEXT_PUBLIC_DATA_BACKEND === "postgres" ? "CFBD · NEON" : "MOCK DATA"}
           </span>
         </div>

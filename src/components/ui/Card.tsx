@@ -4,16 +4,21 @@ import type { ReactNode } from "react";
 export function Card({
   children,
   className,
+  interactive = false,
   as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
+  /** Adds hover lift + border brighten for clickable cards. */
+  interactive?: boolean;
   as?: "div" | "section" | "article";
 }) {
   return (
     <Tag
       className={cn(
-        "rounded-md border border-hairline bg-surface-1 shadow-card",
+        "rounded-lg border border-hairline bg-surface-1 shadow-card edge-highlight",
+        interactive &&
+          "transition-[transform,border-color,box-shadow] duration-[var(--duration-base)] ease-out hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-md",
         className,
       )}
     >
@@ -41,8 +46,8 @@ export function CardHeader({
       )}
     >
       <div className="min-w-0">
-        {eyebrow && <div className="eyebrow mb-0.5">{eyebrow}</div>}
-        <h3 className="truncate font-display text-[15px] font-semibold tracking-wide text-ink">
+        {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
+        <h3 className="truncate font-display text-[15px] font-semibold tracking-tight text-ink">
           {title}
         </h3>
       </div>

@@ -20,11 +20,11 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard, section: "War Room" },
-  { label: "Transfer Portal", href: "/portal", icon: Radar, section: "Scouting", count: 312 },
-  { label: "Recruiting Board", href: "/board", icon: Columns3, section: "Scouting" },
-  { label: "Team Needs", href: "/needs", icon: Target, section: "Roster" },
-  { label: "Reports", href: "/reports", icon: FileText, section: "Output" },
-  { label: "AI Assistant", href: "/assistant", icon: Sparkles, section: "Intelligence", count: 2 },
-  { label: "Settings", href: "/settings", icon: Settings, section: "Admin" },
+  { label: "Dashboard", href: "/app", icon: LayoutDashboard, section: "War Room" },
+  { label: "Transfer Portal", href: "/app/portal", icon: Radar, section: "Scouting", count: 312 },
+  { label: "Recruiting Board", href: "/app/board", icon: Columns3, section: "Scouting" },
+  { label: "Team Needs", href: "/app/needs", icon: Target, section: "Roster" },
+  { label: "Reports", href: "/app/reports", icon: FileText, section: "Output" },
+  { label: "AI Assistant", href: "/app/assistant", icon: Sparkles, section: "Intelligence", count: 2 },
+  { label: "Settings", href: "/app/settings", icon: Settings, section: "Admin" },
 ];

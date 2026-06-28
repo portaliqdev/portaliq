@@ -46,7 +46,7 @@ export default async function ReportsPage() {
                     <tr key={p.id} className="border-b border-hairline hover:bg-surface-2">
                       <td className="px-3 py-1.5 font-display text-[13px] font-bold tnum text-ink-muted">{i + 1}</td>
                       <td className="px-3 py-1.5"><PositionPill code={p.primaryPosition} size="sm" /></td>
-                      <td className="px-3 py-1.5"><Link href={`/players/${p.id}`} className="font-medium text-ink hover:text-md-red">{p.fullName}</Link></td>
+                      <td className="px-3 py-1.5"><Link href={`/app/players/${p.id}`} className="font-medium text-ink hover:text-brand-500">{p.fullName}</Link></td>
                       <td className="px-3 py-1.5 text-ink-sub">{p.currentSchool.name}</td>
                       <td className="px-3 py-1.5 text-ink-muted">{p.currentSchool.conference}</td>
                       <td className="px-3 py-1.5 tnum text-ink-sub">{p.eligibility.yearsRemaining}</td>
@@ -61,14 +61,14 @@ export default async function ReportsPage() {
 
           {/* Undervalued */}
           <Card>
-            <CardHeader eyebrow="Moneyball" title={<span className="inline-flex items-center gap-1.5"><TrendingUp size={14} className="text-md-gold" /> Most Undervalued</span>} />
+            <CardHeader eyebrow="Moneyball" title={<span className="inline-flex items-center gap-1.5"><TrendingUp size={14} className="text-amber-400" /> Most Undervalued</span>} />
             <div className="divide-y divide-hairline">
               {undervalued.map((p, i) => (
-                <Link key={p.id} href={`/players/${p.id}`} className="flex items-center gap-2 px-4 py-2 hover:bg-surface-2">
+                <Link key={p.id} href={`/app/players/${p.id}`} className="flex items-center gap-2 px-4 py-2 hover:bg-surface-2">
                   <span className="w-5 font-display text-[12px] font-bold tnum text-ink-muted">{i + 1}</span>
                   <PositionPill code={p.primaryPosition} size="sm" />
                   <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">{p.fullName}</span>
-                  <span className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-md-gold tnum">+{p.undervaluation}</span>
+                  <span className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-amber-400 tnum">+{p.undervaluation}</span>
                 </Link>
               ))}
             </div>
@@ -87,7 +87,7 @@ export default async function ReportsPage() {
                 </div>
                 <div className="divide-y divide-hairline">
                   {r.players.map((p, i) => (
-                    <Link key={p.id} href={`/players/${p.id}`} className="flex items-center gap-2 px-3 py-1.5 hover:bg-surface-2">
+                    <Link key={p.id} href={`/app/players/${p.id}`} className="flex items-center gap-2 px-3 py-1.5 hover:bg-surface-2">
                       <span className="w-4 text-[11px] tnum text-ink-muted">{i + 1}</span>
                       <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">{p.fullName}</span>
                       <FitScoreBadge score={p.fitScore} size="sm" />

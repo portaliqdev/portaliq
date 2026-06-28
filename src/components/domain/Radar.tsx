@@ -2,7 +2,7 @@
 export function Radar({
   data,
   size = 220,
-  color = "#2563eb",
+  color = "#5b8def",
 }: {
   data: { label: string; value: number }[];
   size?: number;
@@ -27,22 +27,37 @@ export function Radar({
       })
       .join(" ") + " Z";
 
+  const gid = "radarFill";
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <defs>
+        <radialGradient id={gid} cx="50%" cy="50%" r="65%">
+          <stop offset="0%" stopColor={color} stopOpacity={0.45} />
+          <stop offset="100%" stopColor={color} stopOpacity={0.12} />
+        </radialGradient>
+      </defs>
       {rings.map((r) => (
         <polygon
           key={r}
           points={data.map((_, i) => pt(i, r).join(",")).join(" ")}
           fill="none"
-          stroke="#e3e6eb"
+          stroke="rgba(255,255,255,0.07)"
           strokeWidth={1}
         />
       ))}
       {data.map((_, i) => {
         const [x, y] = pt(i, 1);
-        return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#e3e6eb" strokeWidth={1} />;
+        return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="rgba(255,255,255,0.07)" strokeWidth={1} />;
       })}
-      <path d={dataPath} fill={`${color}33`} stroke={color} strokeWidth={2} strokeLinejoin="round" />
+      <path
+        d={dataPath}
+        fill={`url(#${gid})`}
+        stroke={color}
+        strokeWidth={2}
+        strokeLinejoin="round"
+        style={{ filter: `drop-shadow(0 0 5px ${color}66)` }}
+      />
       {data.map((d, i) => {
         const [x, y] = pt(i, 1.16);
         return (
@@ -53,8 +68,9 @@ export function Radar({
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize={9}
-            fill="#7C828C"
-            className="uppercase"
+            fontWeight={500}
+            fill="#9ca1ab"
+            letterSpacing={0.5}
           >
             {d.label}
           </text>

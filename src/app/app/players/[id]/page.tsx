@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/Badge";
 import { formatHeight, formatWeight, longDate, fmt, clamp } from "@/lib/utils";
 import { pedigreeScore } from "@/lib/scoring";
 import { PROFILES } from "@/lib/mock-data/position-profiles";
-import { POSITION_META } from "@/types/enums";
+import { POSITION_META, POSITION_GROUP_HEX } from "@/types/enums";
 import type { Player } from "@/types/player";
 import type { PlayerMeasurements } from "@/types/stats";
 import {
@@ -119,15 +119,20 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
   return (
     <>
       {/* Hero */}
-      <div className="border-b border-hairline bg-base px-6 py-5">
-        <Link href="/portal" className="mb-3 inline-flex items-center gap-1 text-[12px] text-ink-muted hover:text-ink">
+      <div className="relative overflow-hidden border-b border-hairline bg-base px-6 py-5">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-20 -top-32 h-72 w-[36rem] rounded-full opacity-25 blur-3xl"
+          style={{ background: `radial-gradient(closest-side, ${POSITION_GROUP_HEX[meta.group]}, transparent)` }}
+        />
+        <Link href="/app/portal" className="relative mb-3 inline-flex items-center gap-1 text-[12px] text-ink-muted transition-colors hover:text-ink">
           <ChevronLeft size={14} /> Back to portal
         </Link>
-        <div className="flex flex-wrap items-start justify-between gap-5">
+        <div className="relative flex flex-wrap items-start justify-between gap-5">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
               <PositionPill code={p.primaryPosition} />
-              <h1 className="font-display text-3xl font-bold tracking-wide text-ink">{p.fullName}</h1>
+              <h1 className="font-display text-3xl font-bold tracking-tight text-ink">{p.fullName}</h1>
               {p.jerseyNumber && <span className="font-display text-xl text-ink-muted">#{p.jerseyNumber}</span>}
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-sub">
@@ -210,7 +215,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
                   <span key={s.id} className="rounded bg-surface-2 px-2 py-1 text-ink-sub">{s.name}</span>
                 ))}
                 {previousSchools.length > 0 && <ArrowRight size={14} className="text-ink-muted" />}
-                <span className="rounded bg-md-red/15 px-2 py-1 font-medium text-md-red">{p.currentSchool.name}</span>
+                <span className="rounded-md bg-brand-500/15 px-2 py-1 font-medium text-brand-500 ring-1 ring-inset ring-brand-500/30">{p.currentSchool.name}</span>
               </div>
               <div className="divide-y divide-hairline">
                 {transfers.map((t) => (
@@ -263,7 +268,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
                   <div key={e.id} className="px-4 py-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[13px] font-medium text-ink">{e.evaluatorName}</span>
-                      <span className="font-display text-[15px] font-bold tnum text-md-gold">{e.numericGrade ?? "—"}</span>
+                      <span className="font-display text-[15px] font-bold tnum text-amber-400">{e.numericGrade ?? "—"}</span>
                     </div>
                     <div className="text-[11px] text-ink-muted">{e.evaluatorRole.replace(/_/g, " ")} · {e.stage} · {e.confidence} conf.</div>
                   </div>
@@ -281,7 +286,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
           <Card>
             <div className="space-y-3 p-4">
               <AddToBoardButton playerId={p.id} />
-              <Link href="/board" className="block w-full rounded-md border border-hairline-strong bg-surface-2 px-3 py-2 text-center text-[13px] font-medium text-ink-sub hover:text-ink">
+              <Link href="/app/board" className="block w-full rounded-lg border border-hairline-strong bg-surface-2 px-3 py-2 text-center text-[13px] font-medium text-ink-sub transition-colors hover:bg-surface-3 hover:text-ink">
                 Open Recruiting Board
               </Link>
               <div className="border-t border-hairline pt-3">

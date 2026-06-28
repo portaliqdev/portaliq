@@ -51,15 +51,15 @@ export function ScoutingReportCard({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <div className="eyebrow mb-2 text-sem-success">Strengths</div>
-            <BulletList items={report.strengths} icon={Check} color="#16a34a" />
+            <BulletList items={report.strengths} icon={Check} color="#34d399" />
           </div>
           <div>
             <div className="eyebrow mb-2 text-sem-risk">Weaknesses</div>
-            <BulletList items={report.weaknesses} icon={AlertTriangle} color="#d97706" />
+            <BulletList items={report.weaknesses} icon={AlertTriangle} color="#fbbf24" />
           </div>
           <div>
             <div className="eyebrow mb-2 text-sem-danger">Risk Factors</div>
-            <BulletList items={report.riskFactors} icon={ShieldAlert} color="#dc2626" />
+            <BulletList items={report.riskFactors} icon={ShieldAlert} color="#f87171" />
           </div>
         </div>
 

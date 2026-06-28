@@ -55,11 +55,11 @@ export const RISK_META: Record<DepartureRisk, { label: string; tone: Tone }> = {
   HIGH: { label: "High", tone: "danger" },
 };
 
-/** Color band for a fit/grade score (matches ui-ux fit ramp). */
+/** Color band for a fit/grade score — luminous dark-mode fit ramp. */
 export function fitBand(score: number): { tone: Tone; hex: string; label: string } {
-  if (score >= 90) return { tone: "commit", hex: "#047857", label: "Elite" };
-  if (score >= 75) return { tone: "success", hex: "#16a34a", label: "Strong" };
-  if (score >= 60) return { tone: "gold", hex: "#d4a017", label: "Solid" };
-  if (score >= 45) return { tone: "risk", hex: "#ea580c", label: "Marginal" };
-  return { tone: "danger", hex: "#dc2626", label: "Poor" };
+  if (score >= 90) return { tone: "commit", hex: "#2dd4bf", label: "Elite" };
+  if (score >= 75) return { tone: "success", hex: "#34d399", label: "Strong" };
+  if (score >= 60) return { tone: "gold", hex: "#fbbf24", label: "Solid" };
+  if (score >= 45) return { tone: "risk", hex: "#fb923c", label: "Marginal" };
+  return { tone: "danger", hex: "#f87171", label: "Poor" };
 }

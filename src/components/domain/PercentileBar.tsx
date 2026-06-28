@@ -15,12 +15,19 @@ export function PercentileBar({
   className?: string;
 }) {
   const pct = Math.max(0, Math.min(100, value));
-  const hex = colorByBand ? fitBand(value).hex : "#2563eb";
+  const hex = colorByBand ? fitBand(value).hex : "#5b8def";
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <span className="w-28 shrink-0 truncate text-[12px] text-ink-sub">{label}</span>
+      {label && <span className="w-28 shrink-0 truncate text-[12px] text-ink-sub">{label}</span>}
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-3">
-        <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: hex }} />
+        <div
+          className="bar-grow h-full rounded-full"
+          style={{
+            width: `${pct}%`,
+            backgroundColor: hex,
+            boxShadow: `0 0 8px ${hex}66`,
+          }}
+        />
       </div>
       <span className="w-10 shrink-0 text-right text-[12px] font-semibold tnum text-ink">
         {Math.round(value)}
