@@ -151,6 +151,11 @@ export default async function DashboardPage() {
                     <FitScoreBadge score={fitScore} size="sm" />
                   </div>
                 ))}
+                {recentEvaluations.length === 0 && (
+                  <div className="px-4 py-8 text-center text-[13px] text-ink-muted">
+                    No evaluations logged yet — graded prospects will appear here.
+                  </div>
+                )}
               </div>
             </Card>
           </div>
