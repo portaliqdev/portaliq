@@ -6,6 +6,7 @@ import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Stat } from "@/components/ui/Stat";
 import { PlayerCard } from "@/components/domain/PlayerCard";
+import { TodaysActions } from "@/features/dashboard/TodaysActions";
 import { PositionPill } from "@/components/domain/PositionPill";
 import { FitScoreBadge } from "@/components/domain/FitScore";
 import { PriorityBadge } from "@/components/domain/StatusBadge";
@@ -48,7 +49,10 @@ function AlertRow({ alert }: { alert: DashboardAlert }) {
 export default async function DashboardPage() {
   const data = await getServices().dashboard.getDashboard(ORG_ID);
   const { org, kpis, newPortalPlayers, priorityRecruits, topNeeds, alerts, aiRecommendations, recentEvaluations } = data;
-  const wf = await getServices().workflow.getMetrics(ORG_ID);
+  const [wf, actionGroups] = await Promise.all([
+    getServices().workflow.getMetrics(ORG_ID),
+    getServices().actions.getActionQueue(ORG_ID),
+  ]);
 
   return (
     <>
@@ -66,6 +70,9 @@ export default async function DashboardPage() {
       />
 
       <div className="space-y-7 p-6">
+        {/* Today's Portal Actions — the command-center queue */}
+        <TodaysActions groups={actionGroups} />
+
         {/* KPI strip */}
         <div className="grid grid-cols-2 gap-3 stagger sm:grid-cols-3 lg:grid-cols-6">
           <Stat label="Portal Players" value={kpis.portalTotal} hint="scouted set" accent />
