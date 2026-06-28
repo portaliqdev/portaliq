@@ -2,7 +2,7 @@
 export function Radar({
   data,
   size = 220,
-  color = "#E21833",
+  color = "#2563eb",
 }: {
   data: { label: string; value: number }[];
   size?: number;
@@ -34,13 +34,13 @@ export function Radar({
           key={r}
           points={data.map((_, i) => pt(i, r).join(",")).join(" ")}
           fill="none"
-          stroke="#23262D"
+          stroke="#e3e6eb"
           strokeWidth={1}
         />
       ))}
       {data.map((_, i) => {
         const [x, y] = pt(i, 1);
-        return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#23262D" strokeWidth={1} />;
+        return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#e3e6eb" strokeWidth={1} />;
       })}
       <path d={dataPath} fill={`${color}33`} stroke={color} strokeWidth={2} strokeLinejoin="round" />
       {data.map((d, i) => {

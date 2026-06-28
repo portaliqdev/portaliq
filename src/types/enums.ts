@@ -145,13 +145,13 @@ export const POSITION_GROUP_COLOR: Record<PositionGroup, string> = {
 };
 
 export const POSITION_GROUP_HEX: Record<PositionGroup, string> = {
-  QB: "#F97316",
-  RB: "#FB7185",
-  WR: "#38BDF8",
-  TE: "#2DD4BF",
-  OL: "#A78BFA",
-  DL: "#FACC15",
-  LB: "#34D399",
-  DB: "#818CF8",
-  ST: "#94A3B8",
+  QB: "#ea580c",
+  RB: "#e11d48",
+  WR: "#0284c7",
+  TE: "#0d9488",
+  OL: "#7c3aed",
+  DL: "#ca8a04",
+  LB: "#059669",
+  DB: "#4f46e5",
+  ST: "#475569",
 };

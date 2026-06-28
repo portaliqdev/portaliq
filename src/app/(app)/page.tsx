@@ -36,7 +36,7 @@ function StatCard({ label, value, hint }: { label: string; value: string | numbe
 }
 
 const ALERT_ICON = { danger: AlertTriangle, risk: AlertTriangle, target: Target, info: Info };
-const ALERT_COLOR = { danger: "#EF4444", risk: "#F59E0B", target: "#FFD520", info: "#60A5FA" };
+const ALERT_COLOR = { danger: "#dc2626", risk: "#d97706", target: "#b45309", info: "#2563eb" };
 
 function AlertRow({ alert }: { alert: DashboardAlert }) {
   const Icon = ALERT_ICON[alert.tone];

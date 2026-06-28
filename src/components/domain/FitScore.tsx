@@ -45,7 +45,7 @@ export function FitDial({ score, size = 96 }: { score?: number; size?: number })
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#23262D" strokeWidth={8} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e3e6eb" strokeWidth={8} />
         <circle
           cx={size / 2}
           cy={size / 2}

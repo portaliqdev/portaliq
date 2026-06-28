@@ -1,41 +1,142 @@
+@import url("https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root,
-[data-theme="dark"] {
-  --canvas: #0b0b0c;
-  --base: #101114;
-  --surface-1: #16181d;
-  --surface-2: #1e2127;
-  --surface-3: #262a32;
-  --hairline: #23262d;
-  --hairline-strong: #2e333c;
-  --ink: #f4f5f7;
-  --ink-sub: #b6bac2;
-  --ink-muted: #7c828c;
-  --md-red: #e21833;
-  --md-gold: #ffd520;
+/* ============================================================================
+   PortalIQ — Light, premium SaaS design system.
+   A deliberate reinterpretation of the "war room": white surfaces, cool-slate
+   neutrals, soft layered shadows, a single restrained blue action accent, and a
+   meaning-carrying color language for positions, recruiting state, and fit.
+   ============================================================================ */
 
-  --font-display: "Saira Condensed", "Oswald", "Arial Narrow", "Helvetica Neue",
-    system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+:root {
+  /* ---- Neutral ramp (cool slate) ---------------------------------------- */
+  --gray-0: #ffffff;
+  --gray-25: #fbfbfc;
+  --gray-50: #f6f7f9;
+  --gray-100: #eef0f3;
+  --gray-200: #e3e6eb;
+  --gray-300: #d2d7de;
+  --gray-400: #a8afba;
+  --gray-500: #79818e;
+  --gray-600: #5a626e;
+  --gray-700: #3d434d;
+  --gray-800: #262b32;
+  --gray-900: #14171c;
+
+  /* ---- Brand blue (action / focus / active) ----------------------------- */
+  --brand-50: #eff4ff;
+  --brand-100: #dbe6fe;
+  --brand-200: #bdd0fd;
+  --brand-300: #93b4fb;
+  --brand-400: #6090f7;
+  --brand-500: #3b72f0;
+  --brand-600: #2563eb;
+  --brand-700: #1d4ed8;
+  --brand-800: #1e40af;
+  --brand-900: #1e3a8a;
+
+  /* ---- Semantic — recruiting state -------------------------------------- */
+  --sem-success: #16a34a;
+  --sem-commit: #15803d;
+  --sem-target: #b45309;
+  --sem-contacted: #0891b2;
+  --sem-evaluating: #7c3aed;
+  --sem-watching: #64748b;
+  --sem-offer: #2563eb;
+  --sem-risk: #d97706;
+  --sem-danger: #dc2626;
+  --sem-lost: #94a3b8;
+  --sem-info: #2563eb;
+  --sem-gold: #b45309;
+
+  /* ---- Position-group color language ------------------------------------ */
+  --pos-qb: #ea580c;
+  --pos-rb: #e11d48;
+  --pos-wr: #0284c7;
+  --pos-te: #0d9488;
+  --pos-ol: #7c3aed;
+  --pos-dl: #ca8a04;
+  --pos-lb: #059669;
+  --pos-db: #4f46e5;
+  --pos-st: #475569;
+
+  /* ---- Fit-score ramp (intuitive red → emerald) ------------------------- */
+  --fit-poor: #dc2626;
+  --fit-marginal: #ea580c;
+  --fit-solid: #d4a017;
+  --fit-strong: #16a34a;
+  --fit-elite: #047857;
+
+  /* ---- Semantic surface / text aliases ---------------------------------- */
+  --canvas: var(--gray-25);
+  --surface-card: var(--gray-0);
+  --surface-sunken: var(--gray-50);
+  --surface-hover: var(--gray-50);
+  --surface-active: var(--brand-50);
+  --overlay: rgba(20, 23, 28, 0.45);
+
+  --border-subtle: var(--gray-100);
+  --border-default: var(--gray-200);
+  --border-strong: var(--gray-300);
+  --border-accent: var(--brand-600);
+
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-muted: var(--gray-500);
+  --text-disabled: var(--gray-400);
+  --text-inverse: var(--gray-0);
+  --text-brand: var(--brand-700);
+
+  --focus-ring: var(--brand-500);
+
+  /* ---- Back-compat aliases for existing Tailwind/CSS-var consumers ------- */
+  --base: var(--gray-25);
+  --surface-1: var(--gray-0);
+  --surface-2: var(--gray-50);
+  --surface-3: var(--gray-100);
+  --hairline: var(--gray-200);
+  --hairline-strong: var(--gray-300);
+  --ink: var(--gray-900);
+  --ink-sub: var(--gray-600);
+  --ink-muted: var(--gray-500);
+  --md-red: var(--brand-600);
+  --md-gold: var(--sem-gold);
+
+  /* ---- Elevation (soft, cool-tinted) ------------------------------------ */
+  --shadow-xs: 0 1px 2px rgba(16, 20, 28, 0.04);
+  --shadow-sm: 0 1px 3px rgba(16, 20, 28, 0.06), 0 1px 2px rgba(16, 20, 28, 0.04);
+  --shadow-md: 0 4px 12px rgba(16, 20, 28, 0.08), 0 2px 4px rgba(16, 20, 28, 0.04);
+  --shadow-lg: 0 12px 32px rgba(16, 20, 28, 0.12), 0 4px 8px rgba(16, 20, 28, 0.05);
+  --shadow-pop: 0 8px 30px rgba(16, 20, 28, 0.16);
+  --shadow-card: 0 1px 2px rgba(16, 20, 28, 0.04), 0 1px 1px rgba(16, 20, 28, 0.03);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.28);
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 160ms;
+  --duration-slow: 200ms;
+
+  /* ---- Fonts ------------------------------------------------------------ */
+  --font-display: "Saira Condensed", "Oswald", "Arial Narrow", system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* ---- Layout dimensions ------------------------------------------------ */
+  --sidebar-w: 232px;
+  --topbar-h: 56px;
+  --content-max: 1440px;
 }
 
-[data-theme="light"] {
-  --canvas: #ffffff;
-  --base: #f4f5f7;
-  --surface-1: #ffffff;
-  --surface-2: #f1f2f4;
-  --surface-3: #e7e9ed;
-  --hairline: #dde0e5;
-  --hairline-strong: #c7ccd3;
-  --ink: #0b0b0c;
-  --ink-sub: #3c424d;
-  --ink-muted: #6b7280;
-  --md-red: #c3142b;
-  --md-gold: #8a7410;
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
 }
 
 * {
@@ -49,9 +150,13 @@ body {
 
 body {
   background-color: var(--canvas);
-  color: var(--ink);
+  color: var(--text-primary);
   font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-feature-settings: "lnum" 1;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
@@ -73,46 +178,36 @@ body {
   font-weight: 600;
   font-size: 0.6875rem;
   line-height: 0.875rem;
-  color: var(--ink-muted);
+  color: var(--text-muted);
 }
 
-/* Maryland flag signature rail (red/gold/black/white quadrant feel) */
+/* Signature accent rail — a single thin brand-blue rail framing the sidebar. */
 .flag-rail {
-  background: repeating-linear-gradient(
-    180deg,
-    #e21833 0,
-    #e21833 8px,
-    #ffd520 8px,
-    #ffd520 16px,
-    #0b0b0c 16px,
-    #0b0b0c 24px,
-    #f4f5f7 24px,
-    #f4f5f7 32px
-  );
+  background: var(--brand-600);
 }
 
-/* Dark scrollbars */
+/* Thin, light scrollbars for data-dense tables */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--base);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2e333c;
-  border-radius: 6px;
-  border: 2px solid var(--base);
+  background: var(--border-strong);
+  border-radius: 9999px;
+  border: 2px solid var(--canvas);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3c424d;
+  background: var(--gray-400);
 }
 
 /* Skeleton shimmer */
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: var(--surface-2);
+  background: var(--surface-sunken);
 }
 .skeleton::after {
   content: "";
@@ -122,7 +217,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.04),
+    rgba(37, 99, 235, 0.06),
     transparent
   );
   animation: shimmer 1.5s infinite;
@@ -132,8 +227,13 @@ body {
     transform: translateX(100%);
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}
 
 :focus-visible {
-  outline: 2px solid var(--md-gold);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 1px;
 }

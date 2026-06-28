@@ -14,12 +14,12 @@ export function PlayerCard({ player: p, workflowStatus }: { player: Player; work
   return (
     <Link
       href={`/players/${p.id}`}
-      className="group block rounded-md border border-hairline bg-surface-1 p-3 transition-colors hover:border-hairline-heavy hover:bg-surface-2"
+      className="group block rounded-md border border-hairline bg-surface-1 p-3 shadow-card transition-colors hover:border-hairline-strong hover:bg-surface-2"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <PositionPill code={p.primaryPosition} />
-          <span className="truncate font-display text-[15px] font-semibold text-ink group-hover:text-white">
+          <span className="truncate font-display text-[15px] font-semibold text-ink group-hover:text-brand-700">
             {p.fullName}
           </span>
         </div>

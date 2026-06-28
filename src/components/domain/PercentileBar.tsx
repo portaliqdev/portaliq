@@ -15,7 +15,7 @@ export function PercentileBar({
   className?: string;
 }) {
   const pct = Math.max(0, Math.min(100, value));
-  const hex = colorByBand ? fitBand(value).hex : "#38BDF8";
+  const hex = colorByBand ? fitBand(value).hex : "#2563eb";
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <span className="w-28 shrink-0 truncate text-[12px] text-ink-sub">{label}</span>
