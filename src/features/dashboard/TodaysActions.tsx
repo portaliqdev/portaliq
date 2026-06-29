@@ -81,7 +81,7 @@ export function TodaysActions({ groups }: { groups: ActionGroup[] }) {
                       <Link
                         key={it.id}
                         href={it.href}
-                        className="inline-flex items-center gap-1 rounded border border-hairline bg-surface-2 px-1.5 py-0.5 text-[11px] text-ink-sub hover:border-hairline-heavy hover:text-ink"
+                        className="inline-flex items-center gap-1 rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[11px] text-ink-sub transition-colors hover:bg-white/[0.08] hover:text-ink"
                       >
                         <span className="font-medium text-ink">{it.label}</span>
                         {it.sublabel && <span className="text-ink-muted">· {it.sublabel}</span>}

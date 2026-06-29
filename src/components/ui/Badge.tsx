@@ -17,22 +17,23 @@ type Tone =
   | "lost"
   | "info";
 
-/* Dark-tuned: translucent tinted fill + luminous text + hairline ring. */
+/* Dark-tuned: calm translucent tinted fill + luminous text. Ring dropped to cut
+   visual noise — the tint alone carries the semantic; severity reads via hue. */
 const TONES: Record<Tone, string> = {
-  neutral: "bg-white/[0.05] text-ink-sub ring-hairline-strong",
-  red: "bg-brand-500/15 text-brand-500 ring-brand-500/30",
-  gold: "bg-amber-500/15 text-amber-400 ring-amber-500/30",
-  success: "bg-sem-success/15 text-sem-success ring-sem-success/30",
-  commit: "bg-sem-commit/15 text-sem-commit ring-sem-commit/30",
-  target: "bg-sem-target/15 text-sem-target ring-sem-target/30",
-  contacted: "bg-sem-contacted/15 text-sem-contacted ring-sem-contacted/30",
-  evaluating: "bg-sem-evaluating/15 text-sem-evaluating ring-sem-evaluating/30",
-  watching: "bg-sem-watching/15 text-sem-watching ring-sem-watching/30",
-  offer: "bg-sem-offer/15 text-sem-offer ring-sem-offer/30",
-  risk: "bg-sem-risk/15 text-sem-risk ring-sem-risk/30",
-  danger: "bg-sem-danger/15 text-sem-danger ring-sem-danger/30",
-  lost: "bg-sem-lost/15 text-sem-lost ring-sem-lost/30",
-  info: "bg-sem-info/15 text-sem-info ring-sem-info/30",
+  neutral: "bg-white/[0.06] text-ink-sub",
+  red: "bg-brand-500/12 text-brand-500",
+  gold: "bg-amber-500/12 text-amber-400",
+  success: "bg-sem-success/12 text-sem-success",
+  commit: "bg-sem-commit/12 text-sem-commit",
+  target: "bg-sem-target/12 text-sem-target",
+  contacted: "bg-sem-contacted/12 text-sem-contacted",
+  evaluating: "bg-sem-evaluating/12 text-sem-evaluating",
+  watching: "bg-sem-watching/12 text-sem-watching",
+  offer: "bg-sem-offer/12 text-sem-offer",
+  risk: "bg-sem-risk/12 text-sem-risk",
+  danger: "bg-sem-danger/12 text-sem-danger",
+  lost: "bg-sem-lost/12 text-sem-lost",
+  info: "bg-sem-info/12 text-sem-info",
 };
 
 export function Badge({
@@ -49,7 +50,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[11px] font-semibold ring-1 ring-inset",
+        "inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[11px] font-medium",
         TONES[tone],
         className,
       )}
