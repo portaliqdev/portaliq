@@ -16,9 +16,9 @@ export function Card({
   return (
     <Tag
       className={cn(
-        "rounded-lg border border-hairline bg-surface-1 shadow-card edge-highlight",
+        "rounded-xl bg-surface-1 shadow-card edge-highlight",
         interactive &&
-          "transition-[transform,border-color,box-shadow] duration-[var(--duration-base)] ease-out hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-md",
+          "cursor-pointer transition-[transform,box-shadow] duration-[var(--duration-base)] ease-out hover:-translate-y-0.5 hover:shadow-md",
         className,
       )}
     >
@@ -41,13 +41,13 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-3 border-b border-hairline px-4 py-3",
+        "flex items-center justify-between gap-3 px-5 pb-2.5 pt-4",
         className,
       )}
     >
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
-        <h3 className="truncate font-display text-[15px] font-semibold tracking-tight text-ink">
+        <h3 className="truncate text-[14px] font-semibold tracking-tight text-ink">
           {title}
         </h3>
       </div>

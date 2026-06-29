@@ -30,8 +30,7 @@ export function Stat({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-lg border border-hairline bg-surface-1 px-4 py-3 shadow-card edge-highlight",
-        "transition-colors duration-[var(--duration-base)] ease-out hover:border-hairline-strong",
+        "group relative overflow-hidden rounded-xl bg-surface-1 px-4 py-3.5 shadow-card edge-highlight",
         className,
       )}
     >

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useSession, signOut } from "@/lib/auth/client";
 import { COMMAND_EVENT } from "@/components/ui/CommandPalette";
+import { MobileNav } from "./MobileNav";
 import { Kbd } from "@/components/ui/Kbd";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ export function Topbar() {
   const { data: session } = useSession();
   const user = session?.user;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const initials = user?.name
@@ -40,11 +42,12 @@ export function Topbar() {
 
   return (
     <header className="glass sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-hairline px-4 sm:px-5">
+      <MobileNav open={navOpen} onClose={() => setNavOpen(false)} onSearch={openCommand} />
       {/* Mobile: menu + logo */}
       <button
-        onClick={openCommand}
-        aria-label="Open menu"
-        className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-sub hover:bg-surface-2 hover:text-ink md:hidden"
+        onClick={() => setNavOpen(true)}
+        aria-label="Open navigation menu"
+        className="flex h-10 w-10 items-center justify-center rounded-lg text-ink-sub hover:bg-surface-2 hover:text-ink md:hidden"
       >
         <Menu size={18} />
       </button>
@@ -64,21 +67,17 @@ export function Topbar() {
         <Kbd>⌘K</Kbd>
       </button>
 
-      <div className="ml-auto flex items-center gap-2">
-        {/* Org context */}
-        <div className="hidden items-center gap-1.5 rounded-lg border border-hairline bg-surface-1 px-2.5 py-1.5 text-[12px] font-semibold text-ink-sub lg:flex">
+      <div className="ml-auto flex items-center gap-1.5">
+        {/* Org + season context — quiet, borderless, grouped */}
+        <div className="hidden items-center gap-1.5 px-1.5 text-[12px] font-medium text-ink-sub lg:flex">
           <Building2 size={14} className="text-ink-muted" />
           <span>Maryland</span>
-        </div>
-
-        {/* Season context */}
-        <div className="hidden items-center gap-1.5 rounded-lg border border-hairline bg-surface-1 px-2.5 py-1.5 text-[12px] font-semibold text-ink-sub md:flex">
-          <Calendar size={14} className="text-ink-muted" />
+          <span className="text-ink-disabled">·</span>
           <span className="tnum">2026</span>
         </div>
 
-        {/* Window countdown chip */}
-        <div className="flex items-center gap-1.5 rounded-full border border-sem-risk/30 bg-sem-risk/10 px-2.5 py-1">
+        {/* Window countdown — calm pill */}
+        <div className="flex items-center gap-1.5 rounded-full bg-sem-risk/10 px-2.5 py-1">
           <Clock size={13} className="text-sem-risk" />
           <span className="text-[12px] font-semibold text-sem-risk">Winter · 4d</span>
         </div>
@@ -86,10 +85,10 @@ export function Topbar() {
         {/* Notifications */}
         <button
           aria-label="Notifications"
-          className="relative flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-hairline bg-surface-1 text-ink-sub transition-colors hover:bg-surface-2 hover:text-ink"
+          className="relative flex h-[34px] w-[34px] items-center justify-center rounded-lg text-ink-sub transition-colors hover:bg-surface-2 hover:text-ink"
         >
           <Bell size={16} />
-          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-sem-danger shadow-[0_0_6px_var(--sem-danger)]" />
+          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-sem-danger" />
         </button>
 
         {/* User menu */}

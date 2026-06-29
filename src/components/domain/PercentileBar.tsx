@@ -25,7 +25,6 @@ export function PercentileBar({
           style={{
             width: `${pct}%`,
             backgroundColor: hex,
-            boxShadow: `0 0 8px ${hex}66`,
           }}
         />
       </div>
