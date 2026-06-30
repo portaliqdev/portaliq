@@ -32,3 +32,18 @@ export type { PositionRanking, ConferenceRow } from "./reports.service";
 export type { RecruitingWorkflowMetrics } from "./recruiting-workflow.service";
 export type { RosterImpact, ProjectedRole } from "./roster-impact.service";
 export type { ActionGroup, ActionItem, ActionTone } from "./actions.service";
+export {
+  computeEffectiveAvailability,
+  applySignal,
+  getAvailabilityView,
+  playerToAvailabilityState,
+  availabilityPatch,
+  STALE_AFTER_DAYS,
+} from "./availability.service";
+export type {
+  AvailabilityState,
+  EffectiveAvailability,
+  AvailabilitySignal,
+  ReconcileResult,
+  AvailabilityView,
+} from "./availability.service";

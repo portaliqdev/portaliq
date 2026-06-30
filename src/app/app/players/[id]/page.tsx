@@ -10,7 +10,9 @@ import {
   PortalStatusBadge,
   RecruitingStatusBadge,
   TierBadge,
+  AvailabilityIndicator,
 } from "@/components/domain/StatusBadge";
+import { getAvailabilityView } from "@/services/availability.service";
 import { Radar } from "@/components/domain/Radar";
 import { PercentileBar } from "@/components/domain/PercentileBar";
 import { ScoutingReportCard } from "@/features/player-profile/ScoutingReportCard";
@@ -91,6 +93,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
   const latest = stats[0];
   const meas = measurements[0];
   const meta = POSITION_META[p.primaryPosition];
+  const availability = getAvailabilityView(p);
 
   const radar = [
     { label: "PROD", value: p.productionScore ?? 50 },
@@ -145,6 +148,10 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <PortalStatusBadge status={p.portalStatus} />
+              <span className="inline-flex items-center gap-1 text-[11px] text-ink-muted">
+                <AvailabilityIndicator source={availability.source} reviewState={availability.reviewState} available={availability.isAvailable} />
+                {availability.sourceLabel}
+              </span>
               <RecruitingStatusBadge status={p.recruitingStatus} />
               <TierBadge tier={p.consensusTier} />
               <StarRating stars={p.stars} />
@@ -153,6 +160,9 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
                 <Badge tone="gold" dot>Undervalued +{p.undervaluation}</Badge>
               )}
             </div>
+            {availability.rawDiffersFromEffective && (
+              <p className="mt-2 max-w-2xl text-[12px] leading-snug text-ink-muted">{availability.explanation}</p>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <FitDial score={p.fitScore} size={104} />
@@ -290,7 +300,7 @@ export default async function PlayerProfilePage({ params }: { params: { id: stri
                 Open Recruiting Board
               </Link>
               <div className="border-t border-hairline pt-3">
-                <AvailabilityControl playerId={p.id} current={p.portalStatus} source={p.statusSource} note={p.statusNote} />
+                <AvailabilityControl playerId={p.id} view={availability} />
               </div>
             </div>
           </Card>

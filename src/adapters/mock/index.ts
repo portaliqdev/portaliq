@@ -7,6 +7,7 @@ import { db } from "@/lib/mock-data";
 import { applyPlayerFilters } from "@/lib/mock-data/query";
 import type {
   PlayerRepository,
+  CommitAvailabilityInput,
   SchoolRepository,
   EvaluationRepository,
   ScoutingReportRepository,
@@ -20,6 +21,7 @@ import type {
 } from "@/repositories";
 import type { Player, PlayerFilters, PortalStatus } from "@/types/player";
 import type { PlayerStats, PlayerMeasurements, FilmLink, TransferEntry } from "@/types/stats";
+import type { StatusEvent } from "@/types/availability";
 import type { School, Conference } from "@/types/school";
 import type { Evaluation } from "@/types/evaluation";
 import type { ScoutingReport } from "@/types/scouting-report";
@@ -78,6 +80,45 @@ export class MockPlayerRepository implements PlayerRepository {
   }
   async listTransferEntries(playerId: string): Promise<TransferEntry[]> {
     return db.transferEntries.filter((t) => t.playerId === playerId);
+  }
+  async commitAvailability(playerId: string, input: CommitAvailabilityInput): Promise<Player> {
+    const now = new Date().toISOString();
+    const i = db.players.findIndex((p) => p.id === playerId);
+    if (i < 0) throw new Error(`Player ${playerId} not found`);
+    db.players[i] = { ...db.players[i], ...input.patch, updatedAt: now };
+    const player = db.players[i];
+
+    const active = db.transferEntries
+      .filter((t) => t.playerId === playerId)
+      .sort((a, b) => b.enteredAt.localeCompare(a.enteredAt))[0];
+    if (input.effectiveStatus && active && active.status !== input.effectiveStatus) {
+      active.status = input.effectiveStatus;
+      active.statusHistory = [
+        ...active.statusHistory,
+        { status: input.effectiveStatus, at: now, source: input.event?.source },
+      ];
+      active.updatedAt = now;
+      if (input.effectiveStatus === "WITHDRAWN" && !active.withdrawnAt) active.withdrawnAt = now;
+      if (input.effectiveStatus === "ENROLLED" && !active.enrolledAt) active.enrolledAt = now;
+      if (input.effectiveStatus === "COMMITTED" && !active.committedAt) active.committedAt = now;
+    }
+
+    if (input.event) {
+      db.statusEvents.push({
+        ...input.event,
+        id: newId(),
+        orgId: player.orgId,
+        playerId,
+        transferEntryId: active?.id,
+        createdAt: now,
+      });
+    }
+    return player;
+  }
+  async listStatusEvents(playerId: string): Promise<StatusEvent[]> {
+    return db.statusEvents
+      .filter((e) => e.playerId === playerId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 }
 

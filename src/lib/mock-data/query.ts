@@ -34,7 +34,14 @@ export function applyPlayerFilters(players: Player[], f: PlayerFilters): Player[
   if (f.positionGroups?.length) out = out.filter((p) => f.positionGroups!.includes(p.positionGroup));
   if (f.conferences?.length) out = out.filter((p) => f.conferences!.includes(p.currentSchool.conference));
   if (f.schoolIds?.length) out = out.filter((p) => f.schoolIds!.includes(p.currentSchoolId));
-  if (f.portalStatuses?.length) out = out.filter((p) => p.portalStatus && f.portalStatuses!.includes(p.portalStatus));
+  // Status filtering on the EFFECTIVE portalStatus. An explicit `portalStatuses`
+  // is an intentional filter (lets staff retrieve withdrawn/committed/enrolled
+  // players); otherwise `availableOnly` restricts to the default available pool.
+  if (f.portalStatuses?.length) {
+    out = out.filter((p) => p.portalStatus && f.portalStatuses!.includes(p.portalStatus));
+  } else if (f.availableOnly) {
+    out = out.filter((p) => p.portalStatus === "IN_PORTAL");
+  }
   if (f.eligibilityClasses?.length) out = out.filter((p) => f.eligibilityClasses!.includes(p.eligibilityClass));
   if (f.minYearsRemaining != null) out = out.filter((p) => p.eligibility.yearsRemaining >= f.minYearsRemaining!);
   if (f.maxYearsRemaining != null) out = out.filter((p) => p.eligibility.yearsRemaining <= f.maxYearsRemaining!);

@@ -13,10 +13,10 @@ async function currentOwner(): Promise<StaffOwner> {
 }
 
 function refresh(playerId: string) {
-  revalidatePath(`/players/${playerId}`);
-  revalidatePath("/portal");
-  revalidatePath("/board");
-  revalidatePath("/");
+  revalidatePath(`/app/players/${playerId}`);
+  revalidatePath("/app/portal");
+  revalidatePath("/app/board");
+  revalidatePath("/app");
 }
 
 async function run<T>(playerId: string, fn: () => Promise<T>) {

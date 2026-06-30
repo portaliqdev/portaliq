@@ -14,7 +14,7 @@ export async function addToBoardAction(playerId: string) {
 export async function moveBoardEntryAction(entryId: string, stage: BoardStage, rank: number) {
   try {
     await getServices().board.moveStage(entryId, stage, rank);
-    revalidatePath("/board");
+    revalidatePath("/app/board");
     return { ok: true as const };
   } catch (e) {
     return { ok: false as const, error: (e as Error).message };
@@ -36,7 +36,7 @@ export async function setBoardPriorityAction(playerId: string, priority: Recruit
     const wf = await getServices().workflow.getByPlayer(playerId); // ensure exists
     if (!wf) return { ok: false as const, error: "Player not found." };
     await getServices().workflow.updatePriority(playerId, priority, await me());
-    revalidatePath("/board");
+    revalidatePath("/app/board");
     return { ok: true as const };
   } catch (e) {
     return { ok: false as const, error: (e as Error).message };
@@ -50,7 +50,7 @@ export async function addBoardNoteAction(playerId: string, note: string) {
     const wf = await getServices().workflow.getByPlayer(playerId);
     if (!wf) return { ok: false as const, error: "Player not found." };
     await getServices().workflow.addNote(playerId, trimmed, await me());
-    revalidatePath("/board");
+    revalidatePath("/app/board");
     return { ok: true as const };
   } catch (e) {
     return { ok: false as const, error: (e as Error).message };
@@ -64,7 +64,7 @@ export async function assignBoardOwnerToMeAction(playerId: string) {
     const actor = await me();
     const assign = wf.owner?.id === actor.id ? undefined : actor; // toggle
     await getServices().workflow.assignOwner(playerId, assign, actor);
-    revalidatePath("/board");
+    revalidatePath("/app/board");
     return { ok: true as const, ownerName: assign?.name ?? null };
   } catch (e) {
     return { ok: false as const, error: (e as Error).message };

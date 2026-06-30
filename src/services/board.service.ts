@@ -25,10 +25,20 @@ export class BoardService {
   async getBoardView(orgId: string): Promise<BoardView | null> {
     const board = await this.board.getDefaultBoard(orgId);
     if (!board) return null;
-    const [stages, entries] = await Promise.all([
+    const [stages, rawEntries] = await Promise.all([
       this.board.listStages(board.id),
       this.board.listEntries(board.id),
     ]);
+    // Refresh each stamp's effective portal status from the live player so the
+    // board flags anyone who has since left the portal (the stamp captured at
+    // add-time would otherwise go stale).
+    const players = await this.players.getMany(rawEntries.map((e) => e.playerId));
+    const statusById = new Map(players.map((p) => [p.id, p.portalStatus]));
+    const entries = rawEntries.map((e) =>
+      statusById.has(e.playerId)
+        ? { ...e, playerStamp: { ...e.playerStamp, portalStatus: statusById.get(e.playerId) } }
+        : e,
+    );
     const columns: BoardColumn[] = stages.map((s) => {
       const colEntries = entries
         .filter((e) => e.canonicalStage === s.canonicalStage)
@@ -68,6 +78,7 @@ export class BoardService {
       fitScore: player.fitScore,
       heightInches: player.heightInches,
       weightLbs: player.weightLbs,
+      portalStatus: player.portalStatus,
     };
     return this.board.addEntry(board.id, {
       orgId,

@@ -65,12 +65,14 @@ export const FilmLinkSchema = z.object({
 });
 export type FilmLink = z.infer<typeof FilmLinkSchema>;
 
-/** A single portal appearance — the availability state machine. */
-export const StatusEventSchema = z.object({
+/** One entry in a transfer record's chronological status history. */
+export const TransferStatusEventSchema = z.object({
   status: PortalStatus,
   at: z.string(),
+  source: z.string().optional(),
   byUserId: z.string().optional(),
 });
+export type TransferStatusEvent = z.infer<typeof TransferStatusEventSchema>;
 
 export const TransferEntrySchema = z.object({
   id: z.string(),
@@ -90,7 +92,7 @@ export const TransferEntrySchema = z.object({
   enrollmentTiming: EnrollmentTiming.optional(),
   isGradTransfer: z.boolean().default(false),
   outgoing: z.boolean().default(false),
-  statusHistory: z.array(StatusEventSchema).default([]),
+  statusHistory: z.array(TransferStatusEventSchema).default([]),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

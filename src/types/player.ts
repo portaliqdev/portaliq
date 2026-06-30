@@ -10,6 +10,7 @@ import {
   Conference,
 } from "./enums";
 import { SchoolStampSchema } from "./school";
+import { StatusSource, ReviewState } from "./availability";
 
 export { PortalStatus, RecruitingStatus };
 
@@ -52,11 +53,31 @@ export const PlayerSchema = z.object({
   eligibilityClass: EligibilityClass,
   eligibility: EligibilityBlockSchema,
   scholarshipStatus: ScholarshipStatus,
+  // ── Availability: portalStatus is the EFFECTIVE status the whole product
+  // reads. It is computed by the availability service from three persisted
+  // layers below, in precedence STAFF_OVERRIDE > ROSTER_CHECK > CFBD. See
+  // src/types/availability.ts and src/services/availability.service.ts.
   portalStatus: PortalStatus.optional(),
-  // Availability provenance (set by CFBD ingest, roster cross-check, or staff).
-  statusSource: z.enum(["CFBD", "ROSTER_CHECK", "STAFF_OVERRIDE"]).optional(),
-  availabilityCheckedAt: z.string().optional(),
-  statusNote: z.string().optional(),
+  statusSource: StatusSource.optional(),
+  statusReviewState: ReviewState.optional(),
+  statusNote: z.string().optional(), // effective note (mirror of winning layer)
+  statusEvidenceUrl: z.string().optional(),
+  availabilityCheckedAt: z.string().optional(), // when effective was last recomputed
+  // Layer 1 — raw CFBD feed.
+  rawPortalStatus: PortalStatus.optional(),
+  rawStatusUpdatedAt: z.string().optional(),
+  // Layer 2 — verified official roster / school-source check.
+  verifiedPortalStatus: PortalStatus.optional(),
+  verifiedAt: z.string().optional(),
+  verifiedNote: z.string().optional(),
+  verifiedEvidenceUrl: z.string().optional(),
+  // Layer 3 — staff override (authoritative until cleared).
+  overridePortalStatus: PortalStatus.optional(),
+  overrideAt: z.string().optional(),
+  overrideNote: z.string().optional(),
+  overrideEvidenceUrl: z.string().optional(),
+  overrideActorId: z.string().optional(),
+  overrideActorName: z.string().optional(),
   // computed / cached
   fitScore: z.number().min(0).max(100).optional(),
   needScore: z.number().min(0).max(100).optional(),
@@ -101,6 +122,9 @@ export const PlayerFiltersSchema = z.object({
   conferences: z.array(Conference).optional(),
   schoolIds: z.array(z.string()).optional(),
   portalStatuses: z.array(PortalStatus).optional(),
+  // Default available-player pool: when true, keep only effective IN_PORTAL.
+  // Ignored if `portalStatuses` is set (an explicit, intentional status filter).
+  availableOnly: z.boolean().optional(),
   eligibilityClasses: z.array(EligibilityClass).optional(),
   minYearsRemaining: z.number().optional(),
   maxYearsRemaining: z.number().optional(),

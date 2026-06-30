@@ -16,6 +16,7 @@ import {
   playerMeasurements as measurementsTbl,
   filmLinks as filmTbl,
   transferEntries as transferTbl,
+  statusEvents as statusEventsTbl,
   schools as schoolsTbl,
   evaluations as evaluationsTbl,
   aiInsights as aiInsightsTbl,
@@ -29,6 +30,7 @@ import {
 } from "@/db/schema";
 import { applyPlayerFilters } from "@/lib/mock-data/query";
 import { PlayerSchema, type Player, type PlayerFilters, type PortalStatus } from "@/types/player";
+import { StatusEventSchema, type StatusEvent } from "@/types/availability";
 import {
   PlayerStatsSchema,
   PlayerMeasurementsSchema,
@@ -64,6 +66,7 @@ import {
 } from "@/types/board";
 import type {
   PlayerRepository,
+  CommitAvailabilityInput,
   SchoolRepository,
   EvaluationRepository,
   ScoutingReportRepository,
@@ -95,6 +98,9 @@ function clean<T extends Record<string, unknown>>(row: T): Record<string, unknow
 const NOT_IMPLEMENTED = (what: string) => () => {
   throw new Error(`Postgres adapter: ${what} is not implemented yet`);
 };
+
+const newEventId = (playerId: string) =>
+  `se_${playerId}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
 
 class PostgresPlayerRepository implements PlayerRepository {
   async list(): Promise<Player[]> {
@@ -149,6 +155,68 @@ class PostgresPlayerRepository implements PlayerRepository {
     const updated = await this.get(id);
     if (!updated) throw new Error(`Player ${id} not found`);
     return updated;
+  }
+  /**
+   * Atomic availability write: player row + active transfer entry (status &
+   * history) + audit event, all in one transaction so they can never diverge.
+   */
+  async commitAvailability(playerId: string, input: CommitAvailabilityInput): Promise<Player> {
+    const now = new Date().toISOString();
+    await db.transaction(async (tx) => {
+      const prow = (
+        await tx.select().from(playersTbl).where(eq(playersTbl.id, playerId)).limit(1)
+      )[0];
+      if (!prow) throw new Error(`Player ${playerId} not found`);
+
+      await tx
+        .update(playersTbl)
+        .set({ ...input.patch, updatedAt: now } as Partial<typeof playersTbl.$inferInsert>)
+        .where(eq(playersTbl.id, playerId));
+
+      // Sync the active (most recent) transfer entry to the effective status.
+      const entries = await tx
+        .select()
+        .from(transferTbl)
+        .where(eq(transferTbl.playerId, playerId))
+        .orderBy(desc(transferTbl.enteredAt));
+      const active = entries[0];
+      if (input.effectiveStatus && active && active.status !== input.effectiveStatus) {
+        const history = [
+          ...(active.statusHistory ?? []),
+          { status: input.effectiveStatus, at: now, source: input.event?.source },
+        ];
+        const extra: Record<string, unknown> = {};
+        if (input.effectiveStatus === "WITHDRAWN" && !active.withdrawnAt) extra.withdrawnAt = now;
+        if (input.effectiveStatus === "ENROLLED" && !active.enrolledAt) extra.enrolledAt = now;
+        if (input.effectiveStatus === "COMMITTED" && !active.committedAt) extra.committedAt = now;
+        await tx
+          .update(transferTbl)
+          .set({ status: input.effectiveStatus, statusHistory: history, updatedAt: now, ...extra })
+          .where(eq(transferTbl.id, active.id));
+      }
+
+      if (input.event) {
+        await tx.insert(statusEventsTbl).values({
+          ...input.event,
+          id: newEventId(playerId),
+          orgId: prow.orgId,
+          playerId,
+          transferEntryId: active?.id,
+          createdAt: now,
+        });
+      }
+    });
+    const updated = await this.get(playerId);
+    if (!updated) throw new Error(`Player ${playerId} not found`);
+    return updated;
+  }
+  async listStatusEvents(playerId: string): Promise<StatusEvent[]> {
+    const rows = await db
+      .select()
+      .from(statusEventsTbl)
+      .where(eq(statusEventsTbl.playerId, playerId))
+      .orderBy(desc(statusEventsTbl.createdAt));
+    return rows.map((r) => StatusEventSchema.parse(clean(r)));
   }
   create = NOT_IMPLEMENTED("players.create") as PlayerRepository["create"];
   delete = NOT_IMPLEMENTED("players.delete") as PlayerRepository["delete"];

@@ -15,6 +15,7 @@ import type {
   FilmLink,
   TransferEntry,
 } from "@/types/stats";
+import type { StatusEvent } from "@/types/availability";
 import type { School, Conference } from "@/types/school";
 import type { Evaluation } from "@/types/evaluation";
 import type { ScoutingReport } from "@/types/scouting-report";
@@ -44,6 +45,21 @@ export interface CrudRepository<T, ID = string>
   extends ReadRepository<T, ID>,
     WriteRepository<T, ID> {}
 
+/**
+ * Atomic availability write. The caller (server action / ingest) computes the
+ * reconciled result through the availability service, then hands the adapter the
+ * full player patch plus an optional audit event and effective status to sync
+ * onto the active transfer entry — all persisted in ONE transaction so the
+ * player, its transfer record, and the audit log can never drift apart.
+ */
+export interface CommitAvailabilityInput {
+  patch: Partial<Omit<Player, "id">>;
+  /** Effective status to mirror onto the active transfer entry (+ its history). */
+  effectiveStatus?: PortalStatus;
+  /** Append an audit row only when the change is material (keeps reruns clean). */
+  event?: Omit<StatusEvent, "id" | "playerId" | "orgId" | "createdAt">;
+}
+
 export interface PlayerRepository extends CrudRepository<Player> {
   queryPlayers(filters: PlayerFilters): Promise<Player[]>;
   listByPosition(positionCode: PositionCode): Promise<Player[]>;
@@ -54,6 +70,9 @@ export interface PlayerRepository extends CrudRepository<Player> {
   listMeasurements(playerId: string): Promise<PlayerMeasurements[]>;
   listFilm(playerId: string): Promise<FilmLink[]>;
   listTransferEntries(playerId: string): Promise<TransferEntry[]>;
+  // availability audit
+  commitAvailability(playerId: string, input: CommitAvailabilityInput): Promise<Player>;
+  listStatusEvents(playerId: string): Promise<StatusEvent[]>;
 }
 
 export interface SchoolRepository extends ReadRepository<School> {

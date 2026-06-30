@@ -17,13 +17,23 @@ export interface ConferenceRow {
 export class ReportsService {
   constructor(private players: PlayerRepository) {}
 
-  async bigBoard(limit = 50): Promise<Player[]> {
+  /**
+   * The available-target pool. Reports rank players the staff can actually
+   * pursue, so committed / withdrawn / enrolled players are excluded — only the
+   * effective IN_PORTAL pool counts as an active portal target (issue #1).
+   */
+  private async available(): Promise<Player[]> {
     const all = await this.players.list();
+    return all.filter((p) => p.portalStatus === "IN_PORTAL");
+  }
+
+  async bigBoard(limit = 50): Promise<Player[]> {
+    const all = await this.available();
     return [...all].sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0)).slice(0, limit);
   }
 
   async byPositionGroup(perGroup = 8): Promise<PositionRanking[]> {
-    const all = await this.players.list();
+    const all = await this.available();
     return POSITION_GROUPS.map((group) => ({
       group,
       players: all
@@ -34,7 +44,7 @@ export class ReportsService {
   }
 
   async undervalued(limit = 25): Promise<Player[]> {
-    const all = await this.players.list();
+    const all = await this.available();
     return [...all]
       .filter((p) => (p.undervaluation ?? 0) > 0)
       .sort((a, b) => (b.undervaluation ?? 0) - (a.undervaluation ?? 0))
@@ -42,7 +52,7 @@ export class ReportsService {
   }
 
   async conferenceBreakdown(): Promise<ConferenceRow[]> {
-    const all = await this.players.list();
+    const all = await this.available();
     const byConf = new Map<Conference, Player[]>();
     for (const p of all) {
       const c = p.currentSchool.conference as Conference;

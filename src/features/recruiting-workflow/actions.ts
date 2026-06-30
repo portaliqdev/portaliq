@@ -137,9 +137,10 @@ async function workflowForPlayer(playerId: string) {
 }
 
 function revalidateWorkflow(playerId: string) {
-  revalidatePath(`/players/${playerId}`);
-  revalidatePath("/portal");
-  revalidatePath("/board");
+  revalidatePath(`/app/players/${playerId}`);
+  revalidatePath("/app/portal");
+  revalidatePath("/app/board");
+  revalidatePath("/app");
 }
 
 export async function getRecruitingWorkflowAction(playerId: string) {
