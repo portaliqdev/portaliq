@@ -45,6 +45,7 @@ function stamp(p: Player): PlayerStamp {
     fitScore: p.fitScore,
     heightInches: p.heightInches,
     weightLbs: p.weightLbs,
+    portalStatus: p.portalStatus,
   };
 }
 

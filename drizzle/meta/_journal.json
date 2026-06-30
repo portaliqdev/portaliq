@@ -43,6 +43,13 @@
       "when": 1782092110272,
       "tag": "0005_gifted_warbird",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1782796904259,
+      "tag": "0006_availability_layers",
+      "breakpoints": true
     }
   ]
 }

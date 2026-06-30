@@ -53,6 +53,25 @@ function pos(entry: BoardEntry): string {
   return entry.positionColumn || entry.playerStamp.primaryPosition;
 }
 
+// A flag in this set also means the player has left the available pool (kept as
+// a fallback for entries stamped before portalStatus was carried on the stamp).
+const OFF_PORTAL_FLAGS = new Set([
+  "not-in-portal",
+  "no-longer-in-portal",
+  "off-portal",
+  "withdrawn",
+  "committed",
+  "enrolled",
+]);
+
+// Primary signal: the effective portal status captured on the stamp. A board
+// card is flagged when its player is no longer IN_PORTAL.
+function noLongerInPortal(entry: BoardEntry): boolean {
+  const status = entry.playerStamp.portalStatus;
+  if (status) return status !== "IN_PORTAL";
+  return entry.flags.some((f) => OFF_PORTAL_FLAGS.has(f.toLowerCase()));
+}
+
 function Card({
   entry,
   meta,
@@ -157,6 +176,14 @@ function Card({
         </div>
         <FitScoreBadge score={s.fitScore} size="sm" />
       </div>
+
+      {noLongerInPortal(entry) && (
+        <div className="mt-1.5">
+          <span className="inline-flex items-center gap-1 rounded bg-sem-lost/12 px-1.5 py-0.5 text-[10px] font-medium text-sem-lost">
+            <AlertCircle size={10} /> No longer in portal
+          </span>
+        </div>
+      )}
 
       <div className="mt-1.5 flex items-center justify-between text-[11px] text-ink-muted">
         <span className="truncate">{s.currentSchoolName}</span>

@@ -17,6 +17,10 @@ import type { PositionCode } from "@/types/enums";
 import type { Player } from "@/types/player";
 import type { TransferEntry } from "@/types/stats";
 import type { School, SchoolStamp } from "@/types/school";
+import {
+  computeEffectiveAvailability,
+  availabilityPatch,
+} from "@/services/availability.service";
 import type { CfbdPortalEntry } from "./cfbd-client";
 
 const PLACEHOLDER = "__PLACEHOLDER__"; // marks fields awaiting roster enrichment
@@ -167,7 +171,15 @@ export function mapPortalEntry(e: CfbdPortalEntry, dir: SchoolDirectory): Mapped
   // Deterministic, collision-resistant id from stable fields.
   const id = `player_${slug(`${e.firstName}-${e.lastName}-${e.origin ?? ""}-${pos}`)}_26`;
 
-  const portalStatus = derivePortalStatus(e);
+  // CFBD is the raw layer. A fresh portal entry has only this layer, so the
+  // availability service resolves effective = raw / source CFBD. Staff overrides
+  // and roster checks (held in their own layers) are preserved on re-ingest.
+  const rawStatus = derivePortalStatus(e);
+  const rawAt = e.transferDate ?? now;
+  const availState = { raw: rawStatus, rawUpdatedAt: rawAt };
+  const effective = computeEffectiveAvailability(availState, Date.parse(now));
+  const avail = availabilityPatch(availState, effective, now);
+  const portalStatus = effective.status;
 
   const player: Player = {
     id,
@@ -195,6 +207,7 @@ export function mapPortalEntry(e: CfbdPortalEntry, dir: SchoolDirectory): Mapped
       isGraduate: false,
     },
     scholarshipStatus: "SCHOLARSHIP",
+    ...avail,
     portalStatus,
     awards: [],
     injuryFlags: [],
@@ -220,7 +233,7 @@ export function mapPortalEntry(e: CfbdPortalEntry, dir: SchoolDirectory): Mapped
     committedAt: e.destination ? e.transferDate ?? undefined : undefined,
     isGradTransfer: false,
     outgoing: false,
-    statusHistory: [{ status: portalStatus ?? "IN_PORTAL", at: e.transferDate ?? now }],
+    statusHistory: [{ status: portalStatus ?? "IN_PORTAL", at: e.transferDate ?? now, source: "CFBD" }],
     createdAt: now,
     updatedAt: now,
   };

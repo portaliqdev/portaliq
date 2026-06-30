@@ -3,7 +3,7 @@ import type { Player } from "@/types/player";
 import { PositionPill } from "./PositionPill";
 import { StarRating } from "./StarRating";
 import { FitScoreBadge } from "./FitScore";
-import { PortalStatusBadge } from "./StatusBadge";
+import { PortalStatusBadge, AvailabilityIndicator } from "./StatusBadge";
 import { WorkflowStatusBadge } from "./WorkflowBadge";
 import { formatHeight, formatWeight } from "@/lib/utils";
 import { TrendingUp } from "lucide-react";
@@ -55,6 +55,11 @@ export function PlayerCard({ player: p, workflowStatus }: { player: Player; work
             </span>
           )}
           <span className="tnum">{p.eligibility.yearsRemaining}y</span>
+          <AvailabilityIndicator
+            source={p.statusSource}
+            reviewState={p.statusReviewState}
+            available={p.portalStatus === "IN_PORTAL"}
+          />
           {workflowStatus ? (
             <WorkflowStatusBadge status={workflowStatus} />
           ) : (

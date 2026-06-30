@@ -70,12 +70,32 @@ export const players = pgTable(
     eligibilityClass: text("eligibility_class").notNull(),
     eligibility: jsonb("eligibility").$type<EligibilityBlock>().notNull(),
     scholarshipStatus: text("scholarship_status").notNull(),
+    // ── Availability ────────────────────────────────────────────────────────
+    // portalStatus is the EFFECTIVE status the product reads; it is computed by
+    // the availability service from the raw/verified/override layers below, in
+    // precedence STAFF_OVERRIDE > ROSTER_CHECK > CFBD. Every change is also
+    // appended to status_events for a full audit trail.
     portalStatus: text("portal_status"),
-    // Availability provenance — who/what last set portalStatus, and when.
-    // Precedence: STAFF_OVERRIDE > ROSTER_CHECK > CFBD (enforced on write).
     statusSource: text("status_source").notNull().default("CFBD"),
-    availabilityCheckedAt: text("availability_checked_at"),
+    statusReviewState: text("status_review_state"),
     statusNote: text("status_note"),
+    statusEvidenceUrl: text("status_evidence_url"),
+    availabilityCheckedAt: text("availability_checked_at"),
+    // Layer 1 — raw CFBD feed.
+    rawPortalStatus: text("raw_portal_status"),
+    rawStatusUpdatedAt: text("raw_status_updated_at"),
+    // Layer 2 — verified official roster / school-source check.
+    verifiedPortalStatus: text("verified_portal_status"),
+    verifiedAt: text("verified_at"),
+    verifiedNote: text("verified_note"),
+    verifiedEvidenceUrl: text("verified_evidence_url"),
+    // Layer 3 — staff override (authoritative until cleared).
+    overridePortalStatus: text("override_portal_status"),
+    overrideAt: text("override_at"),
+    overrideNote: text("override_note"),
+    overrideEvidenceUrl: text("override_evidence_url"),
+    overrideActorId: text("override_actor_id"),
+    overrideActorName: text("override_actor_name"),
     // computed / cached
     fitScore: doublePrecision("fit_score"),
     needScore: doublePrecision("need_score"),
@@ -203,7 +223,7 @@ export const transferEntries = pgTable(
     isGradTransfer: boolean("is_grad_transfer").notNull().default(false),
     outgoing: boolean("outgoing").notNull().default(false),
     statusHistory: jsonb("status_history")
-      .$type<{ status: string; at: string; byUserId?: string }[]>()
+      .$type<{ status: string; at: string; source?: string; byUserId?: string }[]>()
       .notNull()
       .default([]),
     createdAt: text("created_at").notNull(),
@@ -212,6 +232,32 @@ export const transferEntries = pgTable(
   (t) => ({
     playerIdx: index("transfer_entries_player_idx").on(t.playerId),
     seasonIdx: index("transfer_entries_season_idx").on(t.seasonYear),
+  }),
+);
+
+/* ── status_events (availability audit log — append-only) ─────────────────── */
+import type { StatusEvent } from "@/types/availability";
+
+export const statusEvents = pgTable(
+  "status_events",
+  {
+    id: text("id").primaryKey(),
+    orgId: text("org_id").notNull(),
+    playerId: text("player_id").notNull(),
+    transferEntryId: text("transfer_entry_id"),
+    rawStatus: text("raw_status").$type<StatusEvent["rawStatus"]>(),
+    effectiveStatus: text("effective_status").$type<StatusEvent["effectiveStatus"]>(),
+    source: text("source").notNull().$type<StatusEvent["source"]>(),
+    reviewState: text("review_state").$type<StatusEvent["reviewState"]>(),
+    note: text("note"),
+    evidenceUrl: text("evidence_url"),
+    actorId: text("actor_id"),
+    actorName: text("actor_name"),
+    createdAt: text("created_at").notNull(),
+  },
+  (t) => ({
+    playerIdx: index("status_events_player_idx").on(t.playerId),
+    createdIdx: index("status_events_created_idx").on(t.createdAt),
   }),
 );
 
@@ -457,6 +503,7 @@ export const schema = {
   playerMeasurements,
   filmLinks,
   transferEntries,
+  statusEvents,
   evaluations,
   aiInsights,
   rosterSlots,

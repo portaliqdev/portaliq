@@ -1,4 +1,5 @@
 import type { RecruitingStatus, PortalStatus, BoardStage, EvaluationTier, NeedPriority, DepartureRisk } from "@/types/enums";
+import type { ReviewState } from "@/types/availability";
 
 type Tone =
   | "neutral" | "red" | "gold" | "success" | "commit" | "target" | "contacted"
@@ -19,6 +20,13 @@ export const PORTAL_STATUS_META: Record<PortalStatus, { label: string; tone: Ton
   COMMITTED: { label: "Committed", tone: "commit" },
   WITHDRAWN: { label: "Withdrawn", tone: "lost" },
   ENROLLED: { label: "Enrolled", tone: "success" },
+};
+
+/** Confidence in a player's effective availability — provenance/trust signal. */
+export const REVIEW_STATE_META: Record<ReviewState, { label: string; tone: Tone }> = {
+  VERIFIED: { label: "Verified", tone: "success" },
+  UNVERIFIED: { label: "Unverified", tone: "neutral" },
+  STALE: { label: "Stale", tone: "risk" },
 };
 
 export const BOARD_STAGE_META: Record<BoardStage, { label: string; tone: Tone }> = {

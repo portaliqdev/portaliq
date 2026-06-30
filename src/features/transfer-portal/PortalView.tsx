@@ -12,6 +12,7 @@ import type { RecruitingStatus } from "@/types/recruiting-workflow";
 import { PositionPill } from "@/components/domain/PositionPill";
 import { FitScoreBadge } from "@/components/domain/FitScore";
 import { StarRating } from "@/components/domain/StarRating";
+import { AvailabilityIndicator } from "@/components/domain/StatusBadge";
 import { Table, THead, Th, TBody, Tr, Td } from "@/components/ui/Table";
 import { Card } from "@/components/ui/Card";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
@@ -255,9 +256,17 @@ export function PortalView({
                       <PositionPill code={p.primaryPosition} size="sm" />
                     </Td>
                     <Td>
-                      <Link href={`/app/players/${p.id}`} className="font-medium text-ink hover:text-brand-500">
-                        {p.fullName}
-                      </Link>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Link href={`/app/players/${p.id}`} className="font-medium text-ink hover:text-brand-500">
+                          {p.fullName}
+                        </Link>
+                        <AvailabilityIndicator
+                          source={p.statusSource}
+                          reviewState={p.statusReviewState}
+                          available={p.portalStatus === "IN_PORTAL"}
+                          attentionOnly
+                        />
+                      </span>
                     </Td>
                     <Td className="text-ink-sub">{p.currentSchool.name}</Td>
                     <Td className="text-ink-muted">{p.currentSchool.conference}</Td>

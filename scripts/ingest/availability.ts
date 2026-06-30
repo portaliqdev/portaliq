@@ -8,15 +8,24 @@
  *   npm run check:availability            # uses CURRENT_SEASON
  *   AVAIL_YEAR=2026 npm run check:availability
  *
- * Staff overrides (STAFF_OVERRIDE) are never touched. Note: CFBD does not
- * publish a season's rosters until ~fall camp, so before then this finds 0 and
- * manual staff override is the live correction path.
+ * Each correction is recorded as a ROSTER_CHECK signal through the availability
+ * service: it supersedes CFBD but never an active STAFF_OVERRIDE, syncs the
+ * transfer entry, and appends a status_events audit row — all transactionally.
+ * Note: CFBD doesn't publish a season's rosters until ~fall camp, so before then
+ * this finds 0 and manual staff override is the live correction path.
  */
 import { and, eq, ne } from "drizzle-orm";
 import { db } from "@/db/client";
 import { players as playersTbl } from "@/db/schema";
 import { PlayerSchema } from "@/types/player";
 import { CURRENT_SEASON } from "@/lib/constants";
+import { createPostgresRepositories } from "@/adapters/postgres";
+import {
+  applySignal,
+  playerToAvailabilityState,
+  availabilityPatch,
+} from "@/services/availability.service";
+import type { PortalStatus } from "@/types/enums";
 import { slug } from "./map";
 
 const YEAR = Number(process.env.AVAIL_YEAR ?? CURRENT_SEASON);
@@ -31,6 +40,7 @@ function clean<T extends Record<string, unknown>>(row: T): Record<string, unknow
 }
 
 async function main() {
+  const repos = createPostgresRepositories();
   console.log(`→ Fetching ${YEAR} rosters for cross-check…`);
   const res = await fetch(`${BASE}/roster?year=${YEAR}`, {
     headers: { Authorization: `Bearer ${process.env.CFBD_API_KEY}`, Accept: "application/json" },
@@ -50,7 +60,8 @@ async function main() {
   }
   console.log(`  ${roster.length} roster rows across ${new Set(roster.map((r) => r.team)).size} teams.`);
 
-  // Only re-check players CFBD still calls available, excluding staff overrides.
+  // Only re-check players the EFFECTIVE status still calls available, excluding
+  // staff overrides (a roster check never supersedes a coach's manual call).
   const rows = await db
     .select()
     .from(playersTbl)
@@ -61,30 +72,51 @@ async function main() {
   const now = new Date().toISOString();
   let withdrew = 0;
   let committed = 0;
+  let unchanged = 0;
 
-  for (const p of candidates) {
-    const teams = teamsByName.get(slug(p.fullName));
+  for (const player of candidates) {
+    const teams = teamsByName.get(slug(player.fullName));
     if (!teams || teams.size === 0) continue;
-    const origin = p.currentSchool.name;
-    let status: "WITHDRAWN" | "COMMITTED";
+    const origin = player.currentSchool.name;
+    let status: PortalStatus;
     let note: string;
     if (teams.has(origin)) {
       status = "WITHDRAWN";
       note = `On ${origin}'s ${YEAR} roster — withdrew/returned (CFBD feed stale).`;
-      withdrew++;
     } else {
       const dest = [...teams][0];
       status = "COMMITTED";
       note = `On ${dest}'s ${YEAR} roster — committed/enrolled (CFBD feed stale).`;
-      committed++;
     }
-    await db
-      .update(playersTbl)
-      .set({ portalStatus: status, statusSource: "ROSTER_CHECK", availabilityCheckedAt: now, statusNote: note, updatedAt: now })
-      .where(eq(playersTbl.id, p.id));
+
+    const { next, effective, changed } = applySignal(
+      playerToAvailabilityState(player),
+      { kind: "ROSTER_CHECK", status, at: now, note },
+      Date.parse(now),
+    );
+    if (!changed) {
+      unchanged++;
+      continue;
+    }
+    if (status === "WITHDRAWN") withdrew++;
+    else committed++;
+    await repos.players.commitAvailability(player.id, {
+      patch: availabilityPatch(next, effective, now),
+      effectiveStatus: effective.status,
+      event: {
+        rawStatus: effective.rawStatus,
+        effectiveStatus: effective.status,
+        source: effective.source,
+        reviewState: effective.reviewState,
+        note: effective.note,
+        evidenceUrl: effective.evidenceUrl,
+      },
+    });
   }
 
-  console.log(`\n✓ Cross-check complete — ${withdrew} returned (withdrawn), ${committed} committed elsewhere; ${candidates.length - withdrew - committed} still available.`);
+  console.log(
+    `\n✓ Cross-check complete — ${withdrew} returned (withdrawn), ${committed} committed elsewhere; ${unchanged} already current; ${candidates.length - withdrew - committed - unchanged} still available.`,
+  );
   process.exit(0);
 }
 

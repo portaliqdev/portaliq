@@ -3,6 +3,7 @@ import {
   BoardStage,
   EvaluationTier,
   PositionCode,
+  PortalStatus,
   WindowType,
 } from "./enums";
 
@@ -67,6 +68,9 @@ export const PlayerStampSchema = z.object({
   fitScore: z.number().optional(),
   heightInches: z.number().optional(),
   weightLbs: z.number().optional(),
+  // Effective availability at stamp time — lets the board flag a player who is
+  // no longer in the portal without an extra fetch. Optional for back-compat.
+  portalStatus: PortalStatus.optional(),
 });
 export type PlayerStamp = z.infer<typeof PlayerStampSchema>;
 

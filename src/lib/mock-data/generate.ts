@@ -2,6 +2,7 @@ import type { Player, EligibilityBlock } from "@/types/player";
 import type { School } from "@/types/school";
 import type { Organization, User } from "@/types/user";
 import type { PlayerStats, PlayerMeasurements, FilmLink, TransferEntry } from "@/types/stats";
+import type { StatusEvent } from "@/types/availability";
 import type { Evaluation } from "@/types/evaluation";
 import type { ScoutingReport } from "@/types/scouting-report";
 import type { Board, RecruitingStage, BoardEntry, Watchlist, PlayerStamp } from "@/types/board";
@@ -46,6 +47,7 @@ export interface MockDB {
   measurements: PlayerMeasurements[];
   filmLinks: FilmLink[];
   transferEntries: TransferEntry[];
+  statusEvents: StatusEvent[];
   evaluations: Evaluation[];
   scoutingReports: ScoutingReport[];
   aiInsights: AIInsight[];
@@ -456,6 +458,7 @@ function makeStamp(p: Player): PlayerStamp {
     fitScore: p.fitScore,
     heightInches: p.heightInches,
     weightLbs: p.weightLbs,
+    portalStatus: p.portalStatus,
   };
 }
 
@@ -724,6 +727,7 @@ export function generateMockDB(seed = 20260616, count = 320): MockDB {
     measurements,
     filmLinks,
     transferEntries,
+    statusEvents: [],
     evaluations,
     scoutingReports,
     aiInsights,
